@@ -1,0 +1,41 @@
+booksmentor/
+├── app/
+│   ├── Console/
+│   │   ├── Commands/
+│   │   │   └── SendDailyTeachings.php
+│   ├── Http/
+│   │   └── Controllers/
+│   ├── Models/
+│   │   ├── CatFrecuencia.php
+│   │   ├── CatPlane.php
+│   │   ├── CatIdioma.php
+│   │   ├── CatTag.php
+│   │   ├── CatEstadoSuscripcion.php
+│   │   ├── CatEstadoEnvio.php
+│   │   ├── CatTipoSugerencia.php
+│   │   ├── Usuario.php
+│   │   ├── Libro.php
+│   │   ├── Ensenanza.php
+│   │   ├── Traduccion.php
+│   │   ├── Suscripcion.php
+│   │   ├── SuscripcionIdioma.php
+│   │   ├── HistorialEnvio.php
+│   │   └── SugerenciaUsuario.php
+├── database/
+│   ├── migrations/
+│   │   ├── [timestamp]_create_cat_frecuencias_table.php
+│   │   ├── [timestamp]_create_cat_planes_table.php
+│   │   └── ... (los 16 archivos de migración)
+│   └── seeders/
+│       ├── DatabaseSeeder.php
+│       ├── CatFrecuenciasSeeder.php
+│       ├── CatPlanesSeeder.php
+│       ├── CatIdiomasSeeder.php
+│       ├── CatTagsSeeder.php
+│       ├── CatEstadosSuscripcionSeeder.php
+│       ├── CatEstadosEnvioSeeder.php
+│       └── CatTiposSugerenciaSeeder.php
+├── .env
+├── artisan
+├── composer.json
+└── README.md

@@ -1,0 +1,522 @@
+## 📊 Nueva estructura con tablas de catálogo
+
+### 🔹 Tablas de Catálogo (Maestros)
+
+Estas tablas contienen los **valores posibles** que se usan como opciones en las tablas principales.
+
+---
+
+#### Tabla: `Cat_Frecuencias`
+**Propósito**: Catálogo de frecuencias de envío.
+
+| Campo | Tipo | Descripción |
+|-------|------|-------------|
+| `id` | Autonumérico | Clave primaria |
+| `Nombre` | Texto | "Diaria", "Solo laborables", "Semanal", "Mensual" |
+| `Dias_entre_envios` | Número | 1, 1 (sin sáb/dom), 7, 30 |
+| `Orden` | Número | Para ordenar en UI |
+
+**Datos iniciales**:
+```yaml
+1, "Diaria", 1, 1
+2, "Solo laborables", 1 (sin sáb/dom), 2
+3, "Semanal", 7, 3
+4, "Mensual", 30, 4
+```
+
+---
+
+#### Tabla: `Cat_Planes`
+**Propósito**: Catálogo de planes de suscripción.
+
+| Campo | Tipo | Descripción |
+|-------|------|-------------|
+| `id` | Autonumérico | Clave primaria |
+| `Nombre` | Texto | "Gratuito", "Básico", "Pro", "Premium" |
+| `Max_libros` | Número | Límite de libros permitidos |
+| `Max_idiomas` | Número | Límite de idiomas por libro |
+| `Permite_audio` | Booleano | Sí/No |
+| `Precio_mensual` | Decimal | 0, 3, 7, 12 |
+| `Orden` | Número | Para ordenar en UI |
+
+**Datos iniciales**:
+```yaml
+1, "Gratuito", 1, 1, false, 0.00, 1
+2, "Básico", 5, 2, false, 3.00, 2
+3, "Pro", 30, 3, true, 7.00, 3
+4, "Premium", 999, 5, true, 12.00, 4
+```
+
+---
+
+#### Tabla: `Cat_Idiomas`
+**Propósito**: Catálogo de idiomas disponibles.
+
+| Campo | Tipo | Descripción |
+|-------|------|-------------|
+| `id` | Autonumérico | Clave primaria |
+| `Nombre` | Texto | "Español", "Inglés", "Portugués", "Italiano", "Francés" |
+| `Codigo` | Texto | "es", "en", "pt", "it", "fr" |
+| `Activo` | Booleano | Para activar/desactivar idiomas |
+
+**Datos iniciales**:
+```yaml
+1, "Español", "es", true
+2, "Inglés", "en", true
+3, "Portugués", "pt", true
+4, "Italiano", "it", true
+5, "Francés", "fr", true
+```
+
+---
+
+#### Tabla: `Cat_Tags`
+**Propósito**: Catálogo de etiquetas temáticas para libros.
+
+| Campo | Tipo | Descripción |
+|-------|------|-------------|
+| `id` | Autonumérico | Clave primaria |
+| `Nombre` | Texto | "Productividad", "Hábitos", "Liderazgo", "Finanzas", etc. |
+| `Slug` | Texto | "productividad", "habitos", etc. |
+| `Icono` | Texto | Emoji o nombre de ícono |
+
+**Datos iniciales**:
+```yaml
+1, "Productividad", "productividad", "⚡"
+2, "Hábitos", "habitos", "🔄"
+3, "Liderazgo", "liderazgo", "👥"
+4, "Finanzas", "finanzas", "💰"
+5, "Psicología", "psicologia", "🧠"
+6, "Filosofía", "filosofia", "📜"
+7, "Creatividad", "creatividad", "🎨"
+8, "Educación", "educacion", "📚"
+```
+
+---
+
+#### Tabla: `Cat_Estados_Suscripcion`
+**Propósito**: Catálogo de estados de suscripción.
+
+| Campo | Tipo | Descripción |
+|-------|------|-------------|
+| `id` | Autonumérico | Clave primaria |
+| `Nombre` | Texto | "Activo", "Completado", "Pausado" |
+| `Permite_envios` | Booleano | Si se pueden enviar emails en este estado |
+
+**Datos iniciales**:
+```yaml
+1, "Activo", true
+2, "Completado", false
+3, "Pausado", false
+```
+
+---
+
+#### Tabla: `Cat_Estados_Envio`
+**Propósito**: Catálogo de estados de emails.
+
+| Campo | Tipo | Descripción |
+|-------|------|-------------|
+| `id` | Autonumérico | Clave primaria |
+| `Nombre` | Texto | "Pendiente", "Entregado", "Rebotado", "Abierto", "Fallido" |
+
+**Datos iniciales**:
+```yaml
+1, "Pendiente"
+2, "Entregado"
+3, "Rebotado"
+4, "Abierto"
+5, "Fallido"
+```
+
+---
+
+#### Tabla: `Cat_Tipos_Sugerencia`
+**Propósito**: Catálogo de tipos de sugerencias que pueden enviar los usuarios.
+
+| Campo | Tipo | Descripción |
+|-------|------|-------------|
+| `id` | Autonumérico | Clave primaria |
+| `Nombre` | Texto | "📚 Sugerencia de libro", "🐛 Reporte de error", "💡 Mejora", "❓ Pregunta", "📝 Otro" |
+| `Icono` | Texto | Emoji o nombre de ícono para mostrar en UI |
+| `Orden` | Número | Para ordenar en UI |
+
+**Datos iniciales**:
+```yaml
+1, "📚 Sugerencia de libro", "📚", 1
+2, "🐛 Reporte de error", "🐛", 2
+3, "💡 Mejora", "💡", 3
+4, "❓ Pregunta", "❓", 4
+5, "📝 Otro", "📝", 5
+```
+
+---
+
+### 🔹 Tablas Principales (con FK a Catálogos)
+
+---
+
+#### Tabla: `Usuarios`
+**Propósito**: Información de los usuarios registrados.
+
+| Campo | Tipo | Descripción |
+|-------|------|-------------|
+| `id` | Autonumérico | Clave primaria |
+| `Email` | Texto (único) | Correo electrónico |
+| `Nombre` | Texto | Nombre del usuario |
+| `Frecuencia_id` | **FK a `Cat_Frecuencias`** | ⭐ Frecuencia preferida |
+| `Plan_id` | **FK a `Cat_Planes`** | ⭐ Plan contratado |
+| `Hora_envío` | Hora | Hora preferida para recibir emails |
+| `Zona_horaria` | Texto | Ej: "America/Argentina/Buenos_Aires" |
+| `Fecha_registro` | Fecha | Cuándo se registró |
+| `Activo` | Booleano | Si la cuenta está activa |
+
+---
+
+#### Tabla: `Libros`
+**Propósito**: Catálogo de libros disponibles.
+
+| Campo | Tipo | Descripción |
+|-------|------|-------------|
+| `id` | Autonumérico | Clave primaria |
+| `Título` | Texto | Título del libro |
+| `Autor` | Texto | Nombre del autor |
+| `Idioma_original_id` | **FK a `Cat_Idiomas`** | ⭐ **Idioma en que fue escrito el libro originalmente** |
+| `Año_publicación` | Número | Año de publicación |
+| `Cantidad_enseñanzas` | Número | Total de enseñanzas extraídas |
+| `Fecha_procesamiento` | Fecha | Cuándo se generó el contenido |
+| `Activo` | Booleano | Si está disponible para usuarios |
+
+---
+
+#### Tabla: `Libro_Tags`
+**Propósito**: Relación muchos-a-muchos entre libros y tags.
+
+| Campo | Tipo | Descripción |
+|-------|------|-------------|
+| `id` | Autonumérico | Clave primaria |
+| `Libro_id` | **FK a `Libros`** | Libro |
+| `Tag_id` | **FK a `Cat_Tags`** | Tag |
+
+---
+
+#### Tabla: `Enseñanzas`
+**Propósito**: Cada enseñanza individual extraída de un libro.
+
+| Campo | Tipo | Descripción |
+|-------|------|-------------|
+| `id` | Autonumérico | Clave primaria |
+| `Libro_id` | **FK a `Libros`** | Libro al que pertenece |
+| `Orden` | Número | Orden dentro del libro (1, 2, 3...) |
+| `Texto_original` | Texto largo | **Enseñanza en el idioma original del libro** (definido en `Libros.Idioma_original_id`) |
+| `Tema` | Texto | Tema específico de esta enseñanza |
+
+---
+
+#### Tabla: `Traducciones`
+**Propósito**: Cache de traducciones para reutilizar. Cada registro es una enseñanza traducida a un idioma específico.
+
+| Campo | Tipo | Descripción |
+|-------|------|-------------|
+| `id` | Autonumérico | Clave primaria |
+| `Enseñanza_id` | **FK a `Enseñanzas`** | Enseñanza traducida |
+| `Idioma_id` | **FK a `Cat_Idiomas`** | ⭐ **Idioma DESTINO de la traducción** |
+| `Texto_traducido` | Texto largo | Enseñanza traducida al idioma destino |
+| `Fecha_traducción` | Fecha | Cuándo se generó |
+| `Veces_usado` | Número | Contador de reuso |
+| `Último_uso` | Fecha | Última vez que se usó |
+
+---
+
+#### Tabla: `Suscripciones`
+**Propósito**: Relaciona usuarios con libros y su progreso individual.
+
+| Campo | Tipo | Descripción |
+|-------|------|-------------|
+| `id` | Autonumérico | Clave primaria |
+| `Usuario_id` | **FK a `Usuarios`** | Usuario suscrito |
+| `Libro_id` | **FK a `Libros`** | Libro que está siguiendo |
+| `Estado_id` | **FK a `Cat_Estados_Suscripcion`** | ⭐ Estado de la suscripción |
+| `Última_enseñanza_enviada` | Número | Orden de la última enviada (0 = ninguna) |
+| `Fecha_próximo_envío` | Fecha/Hora | Cuándo enviar la siguiente |
+| `Porcentaje_avance` | **Fórmula** | `([Última_enseñanza_enviada] / lookup('Libros', 'Cantidad_enseñanzas')) * 100` |
+
+---
+
+#### Tabla: `Suscripcion_Idiomas`
+**Propósito**: Idiomas seleccionados por el usuario para un libro específico (relación muchos-a-muchos).
+
+| Campo | Tipo | Descripción |
+|-------|------|-------------|
+| `id` | Autonumérico | Clave primaria |
+| `Suscripcion_id` | **FK a `Suscripciones`** | Suscripción |
+| `Idioma_id` | **FK a `Cat_Idiomas`** | ⭐ Idioma seleccionado por el usuario para este libro |
+
+---
+
+#### Tabla: `Historial_Envíos`
+**Propósito**: Auditoría de todos los emails enviados.
+
+| Campo | Tipo | Descripción |
+|-------|------|-------------|
+| `id` | Autonumérico | Clave primaria |
+| `Usuario_id` | **FK a `Usuarios`** | Usuario que recibió |
+| `Enseñanza_id` | **FK a `Enseñanzas`** | Enseñanza enviada |
+| `Idioma_id` | **FK a `Cat_Idiomas`** | ⭐ Idioma en que se envió |
+| `Estado_id` | **FK a `Cat_Estados_Envio`** | ⭐ Estado del envío |
+| `Fecha_envío` | Fecha/Hora | Cuándo se envió |
+
+---
+
+#### Tabla: `Sugerencias_Usuarios`
+**Propósito**: Almacenar feedback, sugerencias y reportes enviados por los usuarios.
+
+| Campo | Tipo | Descripción |
+|-------|------|-------------|
+| `id` | Autonumérico | Clave primaria |
+| `Usuario_id` | **FK a `Usuarios`** | Usuario que envía la sugerencia (puede ser NULL si no está registrado) |
+| `Email` | Texto | Email del usuario para contacto (obligatorio si no hay Usuario_id) |
+| `Tipo_id` | **FK a `Cat_Tipos_Sugerencia`** | ⭐ Tipo de sugerencia |
+| `Libro_sugerido` | Texto | Nombre del libro que sugiere (opcional) |
+| `Mensaje` | Texto largo | Contenido de la sugerencia o feedback |
+| `Adjunto_url` | Texto | URL de archivo adjunto (opcional) |
+| `Leído` | Booleano | Si el admin ya lo revisó |
+| `Atendido` | Booleano | Si ya se tomó acción |
+| `Fecha_envío` | Fecha/Hora | Cuándo se envió |
+| `Fecha_respuesta` | Fecha/Hora | Cuándo se respondió (si se hizo) |
+| `Respuesta_admin` | Texto largo | Respuesta del administrador (opcional) |
+
+---
+
+## 📊 Diagrama de Relaciones (Texto)
+
+```
+Cat_Frecuencias ───┐
+                   ├── Usuarios ────────────────────────────────┐
+Cat_Planes ────────┤                                            │
+                   │                                            │
+Cat_Idiomas ───────┼── Suscripcion_Idiomas ────┐                │
+                   │           │               │                │
+                   │           └───────────────┼─ Suscripciones │
+                   │                           │                │
+Cat_Tags ──────────┼── Libro_Tags ─────────────┤                │
+                   │                           │                │
+Cat_Estados_Susc ──┼───────────────────────────┘                │
+                   │                                            │
+Cat_Estados_Envio ─┼── Historial_Envíos ────────────────────────┤
+                   │                                            │
+                   └── Traducciones ────────────────────────────┤
+                                    │                           │
+                                    ├── Enseñanzas ──── Libros ─┤
+                                    │                           │
+Cat_Tipos_Sugerencia ─── Sugerencias_Usuarios ──────────────────┘
+```
+
+---
+
+## 🔄 Flujo Lógico para saber el idioma de las enseñanzas
+
+1. **El idioma original de un libro** se almacena en `Libros.Idioma_original_id`
+2. **Todas las enseñanzas** de ese libro están en ese idioma original (`Enseñanzas.Texto_original`)
+3. **Cuando un usuario pide una enseñanza en otro idioma**:
+   - El sistema verifica si existe en `Traducciones` para esa `Enseñanza_id` e `Idioma_id`
+   - Si existe → la reutiliza
+   - Si no existe → la genera (1 sola vez) y la guarda
+4. **En el historial de envíos** se registra en qué idioma se envió cada enseñanza a cada usuario
+
+---
+
+## ✅ ¿Por qué esta normalización es superior?
+
+| Problema con el diseño anterior | Solución con esta estructura |
+|--------------------------------|------------------------------|
+| `Frecuencia` era texto libre | ✅ Ahora es FK a `Cat_Frecuencias` |
+| `Plan` era texto libre | ✅ Ahora es FK a `Cat_Planes` |
+| `Idiomas` repetidos en múltiples tablas | ✅ Un solo `Cat_Idiomas` referenciado |
+| No se sabía en qué idioma estaba el texto original | ✅ `Libros.Idioma_original_id` lo define claramente |
+| Tags en texto plano | ✅ Tabla `Cat_Tags` + relación N:N |
+| Estados escritos a mano | ✅ Catálogos de estados |
+| Dificultad para cambiar un nombre de opción | ✅ Se cambia en UN SOLO lugar |
+| Dificultad para saber qué planes existen | ✅ Consulta simple a `Cat_Planes` |
+
+---
+
+## 🚀 Ventajas de esta arquitectura
+
+1. **Mantenibilidad**: Cambias un valor UNA VEZ y se actualiza en todos lados
+2. **Escalabilidad**: Agregar un nuevo idioma, plan o frecuencia es INSERT en catálogo
+3. **Integridad**: La base de datos garantiza que solo existan valores válidos
+4. **Consultas eficientes**: Las FK permiten JOINs rápidos y exactos
+5. **Internacionalización**: Los catálogos pueden tener nombres en diferentes idiomas
+6. **Claridad**: El idioma de cada texto es siempre explícito (original en libro, destino en traducción)
+
+---
+
+## 📝 Prompt final para Baserow
+
+Copia exactamente este prompt para crear tu base de datos en Baserow:
+
+> **Crear tabla `Cat_Frecuencias`**:
+> - `id` (Autonumérico) - Clave primaria
+> - `Nombre` (Texto) - "Diaria", "Solo laborables", "Semanal", "Mensual"
+> - `Dias_entre_envios` (Número) - 1, 1 (sin sáb/dom), 7, 30
+> - `Orden` (Número) - Para ordenar en UI
+>
+> **Crear tabla `Cat_Planes`**:
+> - `id` (Autonumérico) - Clave primaria
+> - `Nombre` (Texto) - "Gratuito", "Básico", "Pro", "Premium"
+> - `Max_libros` (Número) - Límite de libros permitidos
+> - `Max_idiomas` (Número) - Límite de idiomas por libro
+> - `Permite_audio` (Booleano) - Sí/No
+> - `Precio_mensual` (Decimal) - 0, 3, 7, 12
+> - `Orden` (Número) - Para ordenar en UI
+>
+> **Crear tabla `Cat_Idiomas`**:
+> - `id` (Autonumérico) - Clave primaria
+> - `Nombre` (Texto) - "Español", "Inglés", "Portugués", "Italiano", "Francés"
+> - `Codigo` (Texto) - "es", "en", "pt", "it", "fr"
+> - `Activo` (Booleano) - Para activar/desactivar idiomas
+>
+> **Crear tabla `Cat_Tags`**:
+> - `id` (Autonumérico) - Clave primaria
+> - `Nombre` (Texto) - "Productividad", "Hábitos", "Liderazgo", "Finanzas", "Psicología", "Filosofía", "Creatividad", "Educación"
+> - `Slug` (Texto) - "productividad", "habitos", etc.
+> - `Icono` (Texto) - Emoji o nombre de ícono
+>
+> **Crear tabla `Cat_Estados_Suscripcion`**:
+> - `id` (Autonumérico) - Clave primaria
+> - `Nombre` (Texto) - "Activo", "Completado", "Pausado"
+> - `Permite_envios` (Booleano) - Si se pueden enviar emails en este estado
+>
+> **Crear tabla `Cat_Estados_Envio`**:
+> - `id` (Autonumérico) - Clave primaria
+> - `Nombre` (Texto) - "Pendiente", "Entregado", "Rebotado", "Abierto", "Fallido"
+>
+> **Crear tabla `Cat_Tipos_Sugerencia`**:
+> - `id` (Autonumérico) - Clave primaria
+> - `Nombre` (Texto) - "📚 Sugerencia de libro", "🐛 Reporte de error", "💡 Mejora", "❓ Pregunta", "📝 Otro"
+> - `Icono` (Texto) - Emoji o nombre de ícono
+> - `Orden` (Número) - Para ordenar en UI
+>
+> **Crear tabla `Usuarios`**:
+> - `id` (Autonumérico) - Clave primaria
+> - `Email` (Texto, único, obligatorio) - Correo electrónico
+> - `Nombre` (Texto) - Nombre del usuario
+> - `Frecuencia_id` (Enlace a `Cat_Frecuencias`) - Frecuencia preferida
+> - `Plan_id` (Enlace a `Cat_Planes`) - Plan contratado
+> - `Hora_envío` (Hora) - Hora preferida para recibir emails
+> - `Zona_horaria` (Texto) - Ej: "America/Argentina/Buenos_Aires"
+> - `Fecha_registro` (Fecha) - Cuándo se registró
+> - `Activo` (Booleano, default true) - Si la cuenta está activa
+>
+> **Crear tabla `Libros`**:
+> - `id` (Autonumérico) - Clave primaria
+> - `Título` (Texto, obligatorio) - Título del libro
+> - `Autor` (Texto, obligatorio) - Nombre del autor
+> - `Idioma_original_id` (Enlace a `Cat_Idiomas`, obligatorio) - Idioma en que fue escrito originalmente
+> - `Año_publicación` (Número) - Año de publicación
+> - `Cantidad_enseñanzas` (Número) - Total de enseñanzas extraídas
+> - `Fecha_procesamiento` (Fecha) - Cuándo se generó el contenido
+> - `Activo` (Booleano, default true) - Si está disponible para usuarios
+>
+> **Crear tabla `Libro_Tags`**:
+> - `id` (Autonumérico) - Clave primaria
+> - `Libro_id` (Enlace a `Libros`) - Libro
+> - `Tag_id` (Enlace a `Cat_Tags`) - Tag
+>
+> **Crear tabla `Enseñanzas`**:
+> - `id` (Autonumérico) - Clave primaria
+> - `Libro_id` (Enlace a `Libros`, obligatorio) - Libro al que pertenece
+> - `Orden` (Número, obligatorio) - Orden dentro del libro (1, 2, 3...)
+> - `Texto_original` (Texto largo, obligatorio) - Enseñanza en el idioma original del libro
+> - `Tema` (Texto) - Tema específico de esta enseñanza
+>
+> **Crear tabla `Traducciones`**:
+> - `id` (Autonumérico) - Clave primaria
+> - `Enseñanza_id` (Enlace a `Enseñanzas`, obligatorio) - Enseñanza traducida
+> - `Idioma_id` (Enlace a `Cat_Idiomas`, obligatorio) - Idioma DESTINO de la traducción
+> - `Texto_traducido` (Texto largo, obligatorio) - Enseñanza traducida al idioma destino
+> - `Fecha_traducción` (Fecha) - Cuándo se generó
+> - `Veces_usado` (Número, default 0) - Contador de reuso
+> - `Último_uso` (Fecha) - Última vez que se usó
+>
+> **Crear tabla `Suscripciones`**:
+> - `id` (Autonumérico) - Clave primaria
+> - `Usuario_id` (Enlace a `Usuarios`, obligatorio) - Usuario suscrito
+> - `Libro_id` (Enlace a `Libros`, obligatorio) - Libro que está siguiendo
+> - `Estado_id` (Enlace a `Cat_Estados_Suscripcion`, default "Activo") - Estado de la suscripción
+> - `Última_enseñanza_enviada` (Número, default 0) - Orden de la última enviada (0 = ninguna)
+> - `Fecha_próximo_envío` (Fecha/Hora) - Cuándo enviar la siguiente
+> - `Porcentaje_avance` (Fórmula) - `([Última_enseñanza_enviada] / lookup('Libros', 'Cantidad_enseñanzas')) * 100`
+>
+> **Crear tabla `Suscripcion_Idiomas`**:
+> - `id` (Autonumérico) - Clave primaria
+> - `Suscripcion_id` (Enlace a `Suscripciones`, obligatorio) - Suscripción
+> - `Idioma_id` (Enlace a `Cat_Idiomas`, obligatorio) - Idioma seleccionado por el usuario para este libro
+>
+> **Crear tabla `Historial_Envíos`**:
+> - `id` (Autonumérico) - Clave primaria
+> - `Usuario_id` (Enlace a `Usuarios`, obligatorio) - Usuario que recibió
+> - `Enseñanza_id` (Enlace a `Enseñanzas`, obligatorio) - Enseñanza enviada
+> - `Idioma_id` (Enlace a `Cat_Idiomas`, obligatorio) - Idioma en que se envió
+> - `Estado_id` (Enlace a `Cat_Estados_Envio`, default "Pendiente") - Estado del envío
+> - `Fecha_envío` (Fecha/Hora) - Cuándo se envió
+>
+> **Crear tabla `Sugerencias_Usuarios`**:
+> - `id` (Autonumérico) - Clave primaria
+> - `Usuario_id` (Enlace a `Usuarios`) - Usuario que envía la sugerencia (puede ser NULL si no está registrado)
+> - `Email` (Texto) - Email del usuario para contacto (obligatorio si no hay Usuario_id)
+> - `Tipo_id` (Enlace a `Cat_Tipos_Sugerencia`, obligatorio) - Tipo de sugerencia
+> - `Libro_sugerido` (Texto) - Nombre del libro que sugiere (opcional)
+> - `Mensaje` (Texto largo, obligatorio) - Contenido de la sugerencia
+> - `Adjunto_url` (Texto) - URL de archivo adjunto (opcional)
+> - `Leído` (Booleano, default false) - Si el admin ya lo revisó
+> - `Atendido` (Booleano, default false) - Si ya se tomó acción
+> - `Fecha_envío` (Fecha/Hora, auto) - Cuándo se envió
+> - `Fecha_respuesta` (Fecha/Hora) - Cuándo se respondió (si se hizo)
+> - `Respuesta_admin` (Texto largo) - Respuesta del administrador (opcional)
+
+---
+
+## 🔍 Índices recomendados
+
+Para consultas eficientes en `Sugerencias_Usuarios`:
+
+| Índice | Campos | Propósito |
+|--------|--------|-----------|
+| `idx_sugerencias_usuario` | `Usuario_id` | Buscar sugerencias de un usuario específico |
+| `idx_sugerencias_estado` | `Leído`, `Atendido` | Filtrar sugerencias pendientes |
+| `idx_sugerencias_tipo` | `Tipo_id` | Filtrar por tipo de sugerencia |
+| `idx_sugerencias_fecha` | `Fecha_envío` | Ordenar por fecha |
+
+---
+
+## 🔄 Flujo de uso de Sugerencias
+
+```
+1. Usuario envía sugerencia
+   → Se crea registro en Sugerencias_Usuarios
+   → Leído = false, Atendido = false
+
+2. Administrador revisa panel
+   → Ve lista de sugerencias pendientes (Leído = false)
+   → Lee el mensaje
+
+3. Administrador marca como "Leído"
+   → Leído = true
+
+4. Administrador toma acción
+   → Si es sugerencia de libro: lo agrega a la cola de procesamiento
+   → Si es reporte de error: lo investiga
+   → Si es mejora: la evalúa
+
+5. Administrador responde (opcional)
+   → Completa Respuesta_admin y Fecha_respuesta
+   → Atendido = true
+```
+
+---
+
+## ✅ Esta estructura es 100% normalizada y lista para producción 🚀
+
+**Ahora el idioma de cada enseñanza es explícito y claro**: el idioma original está en el libro, y las traducciones tienen su propio registro con su idioma destino.
