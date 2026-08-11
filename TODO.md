@@ -22,8 +22,7 @@
 - ABM para todas las tablas que correspondan y gestión de todo lo demás que también corresponda
 
 ### Funcionalidades
-- Componentes: migrations, models, view, service, controllers
-- Laravel scheduler para gestionar el envío de enseñanzas traducidas en los tiempos agendados por el usuario.
+- Componentes: view, service, controllers
 - Crear Controllers para manejar la lógica de negocio
 - Crear Views para el frontend con Blade o Livewire
 - Implementar autenticación con Laravel Breeze o Jetstream
@@ -51,26 +50,18 @@
 - Se actualiza dinámicamente `<title>` y metas `description`, `og:` y `twitter:` según el idioma.
 - Sincronizar etiquetas metas, footer y todo lo que se deba sincronizar al cambiar idioma.
 
-### Recursos de idioma CJK — 
+### Recursos de idioma CJK
 - `index.html` ahora incluye la importación de `Noto Sans SC` desde Google Fonts.
 - `src/index.css` aplica `Noto Sans SC` mediante variables CSS cuando `html[data-lang="zh"]` o `html[data-lang="zh-TW"]` están activos.
 
-### O8: Accesibilidad
+### Accesibilidad
 - Optimizar navegación por teclado, para que sea una navegación ágil y fácil de entender ya sea para desktop o móvil, en caso de desktop que contemple tabulación y el buen uso de la tecla Enter.
-- [ ] **O8-C2**: Corregir contraste de texto (`text-slate-500` → WCAG AA), verificar slots vacíos
-- [ ] **O8-C3**: `aria-label` en cartas/botones faltantes
-- [ ] **O8-C4**: `prefers-reduced-motion` global (ya implementado parcialmente en index.css)
 
-### O9: Sonido ambiental de lluvia (ligero)
-- [ ] **O9-C1**: Hook `useRainSound` (Howler/useSound) con loop, activo solo en modo rainy
-- [ ] **O9-C2**: Bajo volumen, sin romper `useSoundEffects` existente
-- [ ] **O9-C3**: Sonido gratuito corto (loopable) tipo "lluvia suave"
-
-### O10: Responsive final + Core Web Vitals + limpieza
-- [ ] **O10-C1**: Revisión integral de todas las resoluciones (360px → ultrawide)
-- [ ] **O10-C2**: Verificar LCP, CLS, INP (evitar animaciones costosas)
-- [ ] **O10-C3**: Correr batería completa de tests
-- [ ] **O10-C4**: Build final (`npm run build`) y verificar compilación
+### Responsive 
+- [ ] Revisión integral de todas las resoluciones
+- [ ] Verificar LCP, CLS, INP (evitar animaciones costosas)
+- [ ] Correr batería completa de tests
+- [ ] Build final y verificar compilación
 
 ### 📱 Auditoría Responsive — Estado por elemento
 
@@ -78,31 +69,36 @@
 
 | Elemento | Estado | Detalle |
 |----------|--------|---------|
-| Cartas (ancho) | ✅ | `--card-w: clamp(36px, 11vw, 78px)` se adapta en todas las resoluciones |
-| Alto de columnas | ✅ | `getColumnHeight` dinámico, no escapa del recuadro |
-| Tablero | ✅ | `game-board` con `p-2 sm:p-4`, grid `gap-1 sm:gap-2` |
-| Grid 7 columnas | ✅ | `grid-cols-7` fijo; las cartas se encogen vía `clamp` |
-| Layout Home | ✅ | `flex-col lg:flex-row`, `px-3 py-5 sm:py-7`, `max-w-[1100px]` |
-| Header pill/título | ✅ | `text-center sm:text-left`, títulos `text-2xl sm:text-3xl` |
-| Botones donación (Ko-fi/Cafecito) | ✅ | `flex-wrap` en la fila; compactos en móvil (`min-h-[52px]`, img `h-[34px]`), normales en `sm+` |
-| Fila de botones | ✅ | `flex-wrap items-center justify-end gap-2` |
-| Botón sonido | ✅ | `min-h-[52px] sm:min-h-[64px]`, `px-3 sm:px-4` |
-| Botón New Game | ✅ | `text-base sm:text-lg`, `px-4 sm:px-6`, sin `min-w` rígido |
-| Overlay de victoria | ✅ | `px-4`, texto responsivo |
-| Details "How to play" | ✅ | `text-sm`, lista fluida |
-| Anuncios (top/bottom/side) | ✅ | `ad-container` responsive, lateral solo ≥1200px, colapso con `:has()` |
-| Footer y páginas (Privacy/Contact) | ⚠️ | No verificados en detalle a 360px; revisar como parte de O10-C1 |
-| Ultrawide (>1920px) | ⚠️ | El tablero queda centrado con `max-w-[1100px]`; validar que no se vea "perdido" ni se dispare el lateral |
 
-**Pendiente de mejora responsive (para O10):**
-- [ ] Revisar footer y páginas administrativas (Privacy/Contact) en 360px–390px
-- [ ] Validar composición en ultrawide (1920px+): el tablero centrado a 1100px puede sentirse pequeño; evaluar `max-w` mayor o fondo decorativo
-- [ ] Confirmar que el anuncio lateral fijo (160px) no genere solapamiento con el contenido en 1200–1400px
-- [ ] Verificación visual de la fila de botones en 360px (que no queden 2 botones partidos de forma fea)
 
 ---
 
-## 📊 LEYENDA
+## � TAREAS ADICIONALES PARA DEJAR EL PROYECTO OPERATIVO AL 100%
+
+### Base operativa
+- [ ] Configurar variables de entorno y archivo de ejemplo para producción (.env.example, APP_URL, DB, MAIL, QUEUE_CONNECTION, CACHE, SESSION)
+- [ ] Implementar autenticación real de usuarios (registro, login, recuperación de contraseña, logout) con roles admin/usuario
+- [ ] Crear estructura de rutas, controladores y vistas para usuarios, suscripciones, libros, enseñanzas y sugerencias
+- [ ] Definir y aplicar políticas de acceso por rol para proteger paneles y operaciones sensibles
+- [ ] Implementar el flujo completo de onboarding al registrarse y elegir plan, frecuencia e idiomas
+
+### Procesos de negocio
+- [ ] Crear CRUDs de administración para libros, enseñanzas, traducciones, suscripciones, usuarios y sugerencias
+- [ ] Implementar reglas de negocio de planes y límites (máximo de libros, idiomas, audio, etc.)
+- [ ] Implementar generación y caché de traducciones para evitar repetir trabajo innecesario
+- [ ] Conectar el comando `teachings:send` con envío real de emails y reintentos/colas
+- [ ] Configurar el scheduler real y verificar ejecuciones automáticas en producción
+
+### Calidad, operación y lanzamiento
+- [ ] Crear tests reales de feature y unit para autenticación, envío de emails, suscripciones y CRUDs críticos
+- [ ] Añadir manejo de errores, logs y alertas para fallos de email, base de datos y jobs
+- [ ] Preparar despliegue productivo (servidor, workers de cola, cron, SSL, backups y monitoreo)
+- [ ] Ejecutar auditoría de UX/UI, accesibilidad, SEO y responsive antes del lanzamiento
+- [ ] Documentar pasos de instalación, uso y mantenimiento para desarrolladores y operarios
+
+---
+
+## �📊 LEYENDA
 
 | Símbolo | Significado |
 |---------|-------------|
