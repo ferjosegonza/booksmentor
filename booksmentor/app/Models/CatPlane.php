@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CatPlane extends Model
 {
+    use HasFactory;
     protected $table = 'cat_planes';
 
     protected $fillable = [
