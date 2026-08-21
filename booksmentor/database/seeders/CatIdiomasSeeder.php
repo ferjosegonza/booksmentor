@@ -20,6 +20,9 @@ class CatIdiomasSeeder extends Seeder
             ['id' => 3, 'nombre' => 'Portugués', 'codigo' => 'pt', 'activo' => true],
             ['id' => 4, 'nombre' => 'Italiano', 'codigo' => 'it', 'activo' => true],
             ['id' => 5, 'nombre' => 'Francés', 'codigo' => 'fr', 'activo' => true],
+            ['id' => 6, 'nombre' => 'Alemán', 'codigo' => 'de', 'activo' => true],
+            ['id' => 7, 'nombre' => 'Chino (Simplificado)', 'codigo' => 'zh', 'activo' => true],
+            ['id' => 8, 'nombre' => 'Chino (Tradicional)', 'codigo' => 'zh-TW', 'activo' => true],
         ]);
     }
 }

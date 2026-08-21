@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('cat_idiomas', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
-            $table->string('codigo', 2);
+            $table->string('codigo', 10);
             $table->boolean('activo')->default(true);
             $table->timestamps();
         });

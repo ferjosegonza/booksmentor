@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
 
     /**
@@ -41,4 +42,20 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
+    public function usuario()
+    {
+        return $this->hasOne(Usuario::class, 'user_id', 'id')->withDefault(function ($usuario) {
+            $usuario->email = $this->email;
+            $usuario->nombre = $this->name;
+            $usuario->frecuencia_id = 1;
+            $usuario->plan_id = 1;
+            $usuario->activo = true;
+        });
+    }
 }

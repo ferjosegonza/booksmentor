@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             CatEstadosSuscripcionSeeder::class,
             CatEstadosEnvioSeeder::class,
             CatTiposSugerenciaSeeder::class,
+            DemoDataSeeder::class,
         ]);
     }
 }

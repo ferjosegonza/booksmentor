@@ -17,7 +17,10 @@ return new class extends Migration
             $table->id();
             $table->string('titulo');
             $table->string('autor');
+            $table->text('descripcion')->nullable();
+            $table->string('portada_url')->nullable();
             $table->foreignId('idioma_original_id')->constrained('cat_idiomas');
+            $table->foreignId('creado_por_usuario_id')->nullable()->constrained('usuarios')->nullOnDelete();
             $table->integer('anio_publicacion')->nullable();
             $table->integer('cantidad_ensenanzas')->default(0);
             $table->date('fecha_procesamiento')->nullable();

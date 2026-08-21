@@ -17,6 +17,7 @@ class Usuario extends Model
     protected $table = 'usuarios';
 
     protected $fillable = [
+        'user_id',
         'email',
         'nombre',
         'frecuencia_id',
@@ -31,6 +32,11 @@ class Usuario extends Model
         'fecha_registro' => 'date',
         'activo' => 'boolean'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 
     public function frecuencia()
     {

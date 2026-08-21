@@ -30,4 +30,14 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'llm' => [
+        'provider' => env('LLM_DEFAULT_PROVIDER', 'deepseek'),
+        'deepseek_key' => env('DEEPSEEK_API_KEY'),
+        'deepseek_url' => env('DEEPSEEK_BASE_URL', 'https://api.deepseek.com/v1'),
+        'groq_key' => env('GROQ_API_KEY'),
+        'openai_key' => env('OPENAI_API_KEY'),
+        'gemini_key' => env('GEMINI_API_KEY'),
+        'ollama_url' => env('OLLAMA_BASE_URL', 'http://localhost:11434'),
+    ],
+
 ];

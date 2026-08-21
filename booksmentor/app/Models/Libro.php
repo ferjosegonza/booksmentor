@@ -17,7 +17,10 @@ class Libro extends Model
     protected $fillable = [
         'titulo',
         'autor',
+        'descripcion',
+        'portada_url',
         'idioma_original_id',
+        'creado_por_usuario_id',
         'anio_publicacion',
         'cantidad_ensenanzas',
         'fecha_procesamiento',
@@ -28,6 +31,11 @@ class Libro extends Model
         'fecha_procesamiento' => 'date',
         'activo' => 'boolean'
     ];
+
+    public function creadoPor()
+    {
+        return $this->belongsTo(Usuario::class, 'creado_por_usuario_id');
+    }
 
     public function idiomaOriginal()
     {

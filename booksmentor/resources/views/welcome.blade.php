@@ -1,132 +1,343 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+@extends('layouts.public')
 
-        <title>Laravel</title>
+@section('title', __('messages.app_name') . ' — ' . __('messages.hero_title'))
+@section('description', __('messages.hero_subtitle'))
 
-        <!-- Fonts -->
-        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
-
-        <!-- Styles -->
-        <style>
-            /*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */html{line-height:1.15;-webkit-text-size-adjust:100%}body{margin:0}a{background-color:transparent}[hidden]{display:none}html{font-family:system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;line-height:1.5}*,:after,:before{box-sizing:border-box;border:0 solid #e2e8f0}a{color:inherit;text-decoration:inherit}svg,video{display:block;vertical-align:middle}video{max-width:100%;height:auto}.bg-white{--bg-opacity:1;background-color:#fff;background-color:rgba(255,255,255,var(--bg-opacity))}.bg-gray-100{--bg-opacity:1;background-color:#f7fafc;background-color:rgba(247,250,252,var(--bg-opacity))}.border-gray-200{--border-opacity:1;border-color:#edf2f7;border-color:rgba(237,242,247,var(--border-opacity))}.border-t{border-top-width:1px}.flex{display:flex}.grid{display:grid}.hidden{display:none}.items-center{align-items:center}.justify-center{justify-content:center}.font-semibold{font-weight:600}.h-5{height:1.25rem}.h-8{height:2rem}.h-16{height:4rem}.text-sm{font-size:.875rem}.text-lg{font-size:1.125rem}.leading-7{line-height:1.75rem}.mx-auto{margin-left:auto;margin-right:auto}.ml-1{margin-left:.25rem}.mt-2{margin-top:.5rem}.mr-2{margin-right:.5rem}.ml-2{margin-left:.5rem}.mt-4{margin-top:1rem}.ml-4{margin-left:1rem}.mt-8{margin-top:2rem}.ml-12{margin-left:3rem}.-mt-px{margin-top:-1px}.max-w-6xl{max-width:72rem}.min-h-screen{min-height:100vh}.overflow-hidden{overflow:hidden}.p-6{padding:1.5rem}.py-4{padding-top:1rem;padding-bottom:1rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.pt-8{padding-top:2rem}.fixed{position:fixed}.relative{position:relative}.top-0{top:0}.right-0{right:0}.shadow{box-shadow:0 1px 3px 0 rgba(0,0,0,.1),0 1px 2px 0 rgba(0,0,0,.06)}.text-center{text-align:center}.text-gray-200{--text-opacity:1;color:#edf2f7;color:rgba(237,242,247,var(--text-opacity))}.text-gray-300{--text-opacity:1;color:#e2e8f0;color:rgba(226,232,240,var(--text-opacity))}.text-gray-400{--text-opacity:1;color:#cbd5e0;color:rgba(203,213,224,var(--text-opacity))}.text-gray-500{--text-opacity:1;color:#a0aec0;color:rgba(160,174,192,var(--text-opacity))}.text-gray-600{--text-opacity:1;color:#718096;color:rgba(113,128,150,var(--text-opacity))}.text-gray-700{--text-opacity:1;color:#4a5568;color:rgba(74,85,104,var(--text-opacity))}.text-gray-900{--text-opacity:1;color:#1a202c;color:rgba(26,32,44,var(--text-opacity))}.underline{text-decoration:underline}.antialiased{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}.w-5{width:1.25rem}.w-8{width:2rem}.w-auto{width:auto}.grid-cols-1{grid-template-columns:repeat(1,minmax(0,1fr))}@media (min-width:640px){.sm\:rounded-lg{border-radius:.5rem}.sm\:block{display:block}.sm\:items-center{align-items:center}.sm\:justify-start{justify-content:flex-start}.sm\:justify-between{justify-content:space-between}.sm\:h-20{height:5rem}.sm\:ml-0{margin-left:0}.sm\:px-6{padding-left:1.5rem;padding-right:1.5rem}.sm\:pt-0{padding-top:0}.sm\:text-left{text-align:left}.sm\:text-right{text-align:right}}@media (min-width:768px){.md\:border-t-0{border-top-width:0}.md\:border-l{border-left-width:1px}.md\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}}@media (min-width:1024px){.lg\:px-8{padding-left:2rem;padding-right:2rem}}@media (prefers-color-scheme:dark){.dark\:bg-gray-800{--bg-opacity:1;background-color:#2d3748;background-color:rgba(45,55,72,var(--bg-opacity))}.dark\:bg-gray-900{--bg-opacity:1;background-color:#1a202c;background-color:rgba(26,32,44,var(--bg-opacity))}.dark\:border-gray-700{--border-opacity:1;border-color:#4a5568;border-color:rgba(74,85,104,var(--border-opacity))}.dark\:text-white{--text-opacity:1;color:#fff;color:rgba(255,255,255,var(--text-opacity))}.dark\:text-gray-400{--text-opacity:1;color:#cbd5e0;color:rgba(203,213,224,var(--text-opacity))}.dark\:text-gray-500{--tw-text-opacity:1;color:#6b7280;color:rgba(107,114,128,var(--tw-text-opacity))}}
-        </style>
-
-        <style>
-            body {
-                font-family: 'Nunito', sans-serif;
-            }
-        </style>
-    </head>
-    <body class="antialiased">
-        <div class="relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center py-4 sm:pt-0">
-            @if (Route::has('login'))
-                <div class="hidden fixed top-0 right-0 px-6 py-4 sm:block">
-                    @auth
-                        <a href="{{ url('/home') }}" class="text-sm text-gray-700 dark:text-gray-500 underline">Home</a>
-                    @else
-                        <a href="{{ route('login') }}" class="text-sm text-gray-700 dark:text-gray-500 underline">Log in</a>
-
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}" class="ml-4 text-sm text-gray-700 dark:text-gray-500 underline">Register</a>
-                        @endif
-                    @endauth
-                </div>
-            @endif
-
-            <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
-                <div class="flex justify-center pt-8 sm:justify-start sm:pt-0">
-                    <svg viewBox="0 0 651 192" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-16 w-auto text-gray-700 sm:h-20">
-                        <g clip-path="url(#clip0)" fill="#EF3B2D">
-                            <path d="M248.032 44.676h-16.466v100.23h47.394v-14.748h-30.928V44.676zM337.091 87.202c-2.101-3.341-5.083-5.965-8.949-7.875-3.865-1.909-7.756-2.864-11.669-2.864-5.062 0-9.69.931-13.89 2.792-4.201 1.861-7.804 4.417-10.811 7.661-3.007 3.246-5.347 6.993-7.016 11.239-1.672 4.249-2.506 8.713-2.506 13.389 0 4.774.834 9.26 2.506 13.459 1.669 4.202 4.009 7.925 7.016 11.169 3.007 3.246 6.609 5.799 10.811 7.66 4.199 1.861 8.828 2.792 13.89 2.792 3.913 0 7.804-.955 11.669-2.863 3.866-1.908 6.849-4.533 8.949-7.875v9.021h15.607V78.182h-15.607v9.02zm-1.431 32.503c-.955 2.578-2.291 4.821-4.009 6.73-1.719 1.91-3.795 3.437-6.229 4.582-2.435 1.146-5.133 1.718-8.091 1.718-2.96 0-5.633-.572-8.019-1.718-2.387-1.146-4.438-2.672-6.156-4.582-1.719-1.909-3.032-4.152-3.938-6.73-.909-2.577-1.36-5.298-1.36-8.161 0-2.864.451-5.585 1.36-8.162.905-2.577 2.219-4.819 3.938-6.729 1.718-1.908 3.77-3.437 6.156-4.582 2.386-1.146 5.059-1.718 8.019-1.718 2.958 0 5.656.572 8.091 1.718 2.434 1.146 4.51 2.674 6.229 4.582 1.718 1.91 3.054 4.152 4.009 6.729.953 2.577 1.432 5.298 1.432 8.162-.001 2.863-.479 5.584-1.432 8.161zM463.954 87.202c-2.101-3.341-5.083-5.965-8.949-7.875-3.865-1.909-7.756-2.864-11.669-2.864-5.062 0-9.69.931-13.89 2.792-4.201 1.861-7.804 4.417-10.811 7.661-3.007 3.246-5.347 6.993-7.016 11.239-1.672 4.249-2.506 8.713-2.506 13.389 0 4.774.834 9.26 2.506 13.459 1.669 4.202 4.009 7.925 7.016 11.169 3.007 3.246 6.609 5.799 10.811 7.66 4.199 1.861 8.828 2.792 13.89 2.792 3.913 0 7.804-.955 11.669-2.863 3.866-1.908 6.849-4.533 8.949-7.875v9.021h15.607V78.182h-15.607v9.02zm-1.432 32.503c-.955 2.578-2.291 4.821-4.009 6.73-1.719 1.91-3.795 3.437-6.229 4.582-2.435 1.146-5.133 1.718-8.091 1.718-2.96 0-5.633-.572-8.019-1.718-2.387-1.146-4.438-2.672-6.156-4.582-1.719-1.909-3.032-4.152-3.938-6.73-.909-2.577-1.36-5.298-1.36-8.161 0-2.864.451-5.585 1.36-8.162.905-2.577 2.219-4.819 3.938-6.729 1.718-1.908 3.77-3.437 6.156-4.582 2.386-1.146 5.059-1.718 8.019-1.718 2.958 0 5.656.572 8.091 1.718 2.434 1.146 4.51 2.674 6.229 4.582 1.718 1.91 3.054 4.152 4.009 6.729.953 2.577 1.432 5.298 1.432 8.162 0 2.863-.479 5.584-1.432 8.161zM650.772 44.676h-15.606v100.23h15.606V44.676zM365.013 144.906h15.607V93.538h26.776V78.182h-42.383v66.724zM542.133 78.182l-19.616 51.096-19.616-51.096h-15.808l25.617 66.724h19.614l25.617-66.724h-15.808zM591.98 76.466c-19.112 0-34.239 15.706-34.239 35.079 0 21.416 14.641 35.079 36.239 35.079 12.088 0 19.806-4.622 29.234-14.688l-10.544-8.158c-.006.008-7.958 10.449-19.832 10.449-13.802 0-19.612-11.127-19.612-16.884h51.777c2.72-22.043-11.772-40.877-33.023-40.877zm-18.713 29.28c.12-1.284 1.917-16.884 18.589-16.884 16.671 0 18.697 15.598 18.813 16.884h-37.402zM184.068 43.892c-.024-.088-.073-.165-.104-.25-.058-.157-.108-.316-.191-.46-.056-.097-.137-.176-.203-.265-.087-.117-.161-.242-.265-.345-.085-.086-.194-.148-.29-.223-.109-.085-.206-.182-.327-.252l-.002-.001-.002-.002-35.648-20.524a2.971 2.971 0 00-2.964 0l-35.647 20.522-.002.002-.002.001c-.121.07-.219.167-.327.252-.096.075-.205.138-.29.223-.103.103-.178.228-.265.345-.066.089-.147.169-.203.265-.083.144-.133.304-.191.46-.031.085-.08.162-.104.25-.067.249-.103.51-.103.776v38.979l-29.706 17.103V24.493a3 3 0 00-.103-.776c-.024-.088-.073-.165-.104-.25-.058-.157-.108-.316-.191-.46-.056-.097-.137-.176-.203-.265-.087-.117-.161-.242-.265-.345-.085-.086-.194-.148-.29-.223-.109-.085-.206-.182-.327-.252l-.002-.001-.002-.002L40.098 1.396a2.971 2.971 0 00-2.964 0L1.487 21.919l-.002.002-.002.001c-.121.07-.219.167-.327.252-.096.075-.205.138-.29.223-.103.103-.178.228-.265.345-.066.089-.147.169-.203.265-.083.144-.133.304-.191.46-.031.085-.08.162-.104.25-.067.249-.103.51-.103.776v122.09c0 1.063.568 2.044 1.489 2.575l71.293 41.045c.156.089.324.143.49.202.078.028.15.074.23.095a2.98 2.98 0 001.524 0c.069-.018.132-.059.2-.083.176-.061.354-.119.519-.214l71.293-41.045a2.971 2.971 0 001.489-2.575v-38.979l34.158-19.666a2.971 2.971 0 001.489-2.575V44.666a3.075 3.075 0 00-.106-.774zM74.255 143.167l-29.648-16.779 31.136-17.926.001-.001 34.164-19.669 29.674 17.084-21.772 12.428-43.555 24.863zm68.329-76.259v33.841l-12.475-7.182-17.231-9.92V49.806l12.475 7.182 17.231 9.92zm2.97-39.335l29.693 17.095-29.693 17.095-29.693-17.095 29.693-17.095zM54.06 114.089l-12.475 7.182V46.733l17.231-9.92 12.475-7.182v74.537l-17.231 9.921zM38.614 7.398l29.693 17.095-29.693 17.095L8.921 24.493 38.614 7.398zM5.938 29.632l12.475 7.182 17.231 9.92v79.676l.001.005-.001.006c0 .114.032.221.045.333.017.146.021.294.059.434l.002.007c.032.117.094.222.14.334.051.124.088.255.156.371a.036.036 0 00.004.009c.061.105.149.191.222.288.081.105.149.22.244.314l.008.01c.084.083.19.142.284.215.106.083.202.178.32.247l.013.005.011.008 34.139 19.321v34.175L5.939 144.867V29.632h-.001zm136.646 115.235l-65.352 37.625V148.31l48.399-27.628 16.953-9.677v33.862zm35.646-61.22l-29.706 17.102V66.908l17.231-9.92 12.475-7.182v33.841z"/>
-                        </g>
-                    </svg>
+@section('content')
+<!-- Hero Section -->
+<section class="relative overflow-hidden bg-gradient-to-b from-indigo-50/50 via-white to-slate-50 pt-16 pb-20 lg:pt-24 lg:pb-32">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            
+            <!-- Hero Text -->
+            <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-100/80 border border-brand-200 text-brand-800 text-xs font-bold uppercase tracking-wider">
+                    <span>✨</span>
+                    <span>Inteligencia Artificial + Hábitos Diarios</span>
                 </div>
 
-                <div class="mt-8 bg-white dark:bg-gray-800 overflow-hidden shadow sm:rounded-lg">
-                    <div class="grid grid-cols-1 md:grid-cols-2">
-                        <div class="p-6">
-                            <div class="flex items-center">
-                                <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="w-8 h-8 text-gray-500"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-                                <div class="ml-4 text-lg leading-7 font-semibold"><a href="https://laravel.com/docs" class="underline text-gray-900 dark:text-white">Documentation</a></div>
-                            </div>
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.1]">
+                    {{ __('messages.hero_title') }}
+                </h1>
 
-                            <div class="ml-12">
-                                <div class="mt-2 text-gray-600 dark:text-gray-400 text-sm">
-                                    Laravel has wonderful, thorough documentation covering every aspect of the framework. Whether you are new to the framework or have previous experience with Laravel, we recommend reading all of the documentation from beginning to end.
-                                </div>
-                            </div>
-                        </div>
+                <p class="text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto lg:mx-0 font-normal leading-relaxed">
+                    {{ __('messages.hero_subtitle') }}
+                </p>
 
-                        <div class="p-6 border-t border-gray-200 dark:border-gray-700 md:border-t-0 md:border-l">
-                            <div class="flex items-center">
-                                <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="w-8 h-8 text-gray-500"><path d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                                <div class="ml-4 text-lg leading-7 font-semibold"><a href="https://laracasts.com" class="underline text-gray-900 dark:text-white">Laracasts</a></div>
-                            </div>
+                <!-- CTA Buttons -->
+                <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-4">
+                    <a href="{{ route('register') }}" class="w-full sm:w-auto px-8 py-4 bg-brand-600 hover:bg-brand-700 text-white font-bold text-base rounded-xl shadow-lg shadow-brand-500/25 hover:shadow-brand-500/40 hover:-translate-y-0.5 transition-all text-center">
+                        {{ __('messages.start_now') }} →
+                    </a>
+                    <a href="#demo-section" class="w-full sm:w-auto px-6 py-4 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-semibold text-base rounded-xl shadow-sm hover:border-slate-300 transition-all text-center flex items-center justify-center gap-2">
+                        <svg class="w-5 h-5 text-brand-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path></svg>
+                        <span>{{ __('messages.view_demo') }}</span>
+                    </a>
+                </div>
 
-                            <div class="ml-12">
-                                <div class="mt-2 text-gray-600 dark:text-gray-400 text-sm">
-                                    Laracasts offers thousands of video tutorials on Laravel, PHP, and JavaScript development. Check them out, see for yourself, and massively level up your development skills in the process.
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="p-6 border-t border-gray-200 dark:border-gray-700">
-                            <div class="flex items-center">
-                                <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="w-8 h-8 text-gray-500"><path d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path></svg>
-                                <div class="ml-4 text-lg leading-7 font-semibold"><a href="https://laravel-news.com/" class="underline text-gray-900 dark:text-white">Laravel News</a></div>
-                            </div>
-
-                            <div class="ml-12">
-                                <div class="mt-2 text-gray-600 dark:text-gray-400 text-sm">
-                                    Laravel News is a community driven portal and newsletter aggregating all of the latest and most important news in the Laravel ecosystem, including new package releases and tutorials.
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="p-6 border-t border-gray-200 dark:border-gray-700 md:border-l">
-                            <div class="flex items-center">
-                                <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="w-8 h-8 text-gray-500"><path d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                <div class="ml-4 text-lg leading-7 font-semibold text-gray-900 dark:text-white">Vibrant Ecosystem</div>
-                            </div>
-
-                            <div class="ml-12">
-                                <div class="mt-2 text-gray-600 dark:text-gray-400 text-sm">
-                                    Laravel's robust library of first-party tools and libraries, such as <a href="https://forge.laravel.com" class="underline">Forge</a>, <a href="https://vapor.laravel.com" class="underline">Vapor</a>, <a href="https://nova.laravel.com" class="underline">Nova</a>, and <a href="https://envoyer.io" class="underline">Envoyer</a> help you take your projects to the next level. Pair them with powerful open source libraries like <a href="https://laravel.com/docs/billing" class="underline">Cashier</a>, <a href="https://laravel.com/docs/dusk" class="underline">Dusk</a>, <a href="https://laravel.com/docs/broadcasting" class="underline">Echo</a>, <a href="https://laravel.com/docs/horizon" class="underline">Horizon</a>, <a href="https://laravel.com/docs/sanctum" class="underline">Sanctum</a>, <a href="https://laravel.com/docs/telescope" class="underline">Telescope</a>, and more.
-                                </div>
-                            </div>
-                        </div>
+                <!-- Stats / Trust signals -->
+                <div class="pt-8 border-t border-slate-200/80 flex items-center justify-center lg:justify-start gap-8 text-slate-600 text-sm">
+                    <div>
+                        <span class="block text-2xl font-black text-slate-900">100%</span>
+                        <span class="text-xs text-slate-500 font-medium">Automatizado</span>
                     </div>
-                </div>
-
-                <div class="flex justify-center mt-4 sm:items-center sm:justify-between">
-                    <div class="text-center text-sm text-gray-500 sm:text-left">
-                        <div class="flex items-center">
-                            <svg fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor" class="-mt-px w-5 h-5 text-gray-400">
-                                <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                            </svg>
-
-                            <a href="https://laravel.bigcartel.com" class="ml-1 underline">
-                                Shop
-                            </a>
-
-                            <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="ml-4 -mt-px w-5 h-5 text-gray-400">
-                                <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                            </svg>
-
-                            <a href="https://github.com/sponsors/taylorotwell" class="ml-1 underline">
-                                Sponsor
-                            </a>
-                        </div>
+                    <div class="h-8 w-px bg-slate-200"></div>
+                    <div>
+                        <span class="block text-2xl font-black text-slate-900">+8 Idiomas</span>
+                        <span class="text-xs text-slate-500 font-medium">Traducción LLM</span>
                     </div>
-
-                    <div class="ml-4 text-center text-sm text-gray-500 sm:text-right sm:ml-0">
-                        Laravel v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }})
+                    <div class="h-8 w-px bg-slate-200"></div>
+                    <div>
+                        <span class="block text-2xl font-black text-slate-900">0 Spam</span>
+                        <span class="text-xs text-slate-500 font-medium">Solo Sabiduría</span>
                     </div>
                 </div>
             </div>
+
+            <!-- Hero Interactive Preview Card -->
+            <div class="lg:col-span-5">
+                <div class="relative mx-auto max-w-md bg-white rounded-2xl shadow-xl shadow-slate-200/60 border border-slate-100 p-6">
+                    <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-rose-400"></span>
+                            <span class="w-3 h-3 rounded-full bg-amber-400"></span>
+                            <span class="w-3 h-3 rounded-full bg-emerald-400"></span>
+                        </div>
+                        <span class="text-xs font-mono text-slate-400">📬 Email Demo</span>
+                    </div>
+
+                    <div class="mt-4 space-y-3">
+                        <div class="flex items-center justify-between text-xs text-slate-500">
+                            <span>De: <strong>BooksMentor</strong> &lt;daily@booksmentor.com&gt;</span>
+                            <span>Hoy, 08:00 AM</span>
+                        </div>
+                        <h3 class="text-base font-bold text-slate-900">📖 Hábitos Atómicos — Lección #1: El poder del 1%</h3>
+                        
+                        <div class="p-4 bg-slate-50 rounded-xl border border-slate-100 text-sm text-slate-700 leading-relaxed">
+                            <p class="font-medium text-brand-900 mb-1">🇪🇸 Español (Original):</p>
+                            <p class="mb-3">"No te concentres en metas grandes; concéntrate en mejorar un 1% cada día. Las mejoras marginales se acumulan exponencialmente."</p>
+
+                            <p class="font-medium text-brand-900 mb-1">🇺🇸 English (AI):</p>
+                            <p class="mb-3">"Do not focus on massive goals; focus on improving by 1% each day. Marginal gains compound exponentially over time."</p>
+
+                            <p class="font-medium text-brand-900 mb-1">🇨🇳 中文 (AI):</p>
+                            <p>"不要只专注于宏伟的目标，每天进步1%即可。微小的改进会随着时间呈指数级累积。"</p>
+                        </div>
+
+                        <div class="pt-2 flex items-center justify-between text-xs">
+                            <span class="text-emerald-600 font-semibold">✓ Entregado con éxito</span>
+                            <span class="text-slate-400">Próximo: Mañana</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
-    </body>
-</html>
+    </div>
+</section>
+
+<!-- Interactive Reader Demo Section -->
+<section id="demo-section" class="py-16 bg-white border-y border-slate-200">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto mb-12">
+            <h2 class="text-3xl font-black text-slate-900 tracking-tight">{{ __('messages.interactive_reader') }}</h2>
+            <p class="text-slate-600 mt-2">Prueba cómo se siente recibir y leer una lección en múltiples idiomas traducida con IA.</p>
+        </div>
+
+        @php
+            $demoLibro = $librosDestacados->first();
+            $demoEnsenanza = $demoLibro ? $demoLibro->ensenanzas->first() : null;
+        @endphp
+
+        @if($demoLibro && $demoEnsenanza)
+            <div class="bg-slate-900 text-white rounded-3xl p-6 sm:p-10 shadow-2xl border border-slate-800" x-data="{ lang: 'es' }">
+                <!-- Book header -->
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-800">
+                    <div>
+                        <span class="text-xs font-mono text-brand-400 uppercase tracking-wider font-semibold">Lección #{{ $demoEnsenanza->orden }} · {{ $demoLibro->titulo }}</span>
+                        <h3 class="text-2xl font-bold text-white mt-1">{{ $demoEnsenanza->tema }}</h3>
+                        <p class="text-xs text-slate-400">por {{ $demoLibro->autor }}</p>
+                    </div>
+
+                    <!-- Audio Text-to-Speech Button -->
+                    <button id="tts-btn" onclick="playCurrentDemoAudio()" class="inline-flex items-center gap-2 px-4 py-2 bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold rounded-xl shadow-md transition-all">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
+                        <span>{{ __('messages.listen_audio') }}</span>
+                    </button>
+                </div>
+
+                <!-- Language Tabs -->
+                <div class="flex flex-wrap gap-2 pt-6">
+                    <button onclick="setDemoLang('es', this)" class="demo-tab-btn active px-3.5 py-1.5 rounded-lg text-xs font-bold bg-brand-600 text-white transition-all">🇪🇸 Español</button>
+                    <button onclick="setDemoLang('en', this)" class="demo-tab-btn px-3.5 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">🇺🇸 English</button>
+                    <button onclick="setDemoLang('pt', this)" class="demo-tab-btn px-3.5 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">🇧🇷 Português</button>
+                    <button onclick="setDemoLang('fr', this)" class="demo-tab-btn px-3.5 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">🇫🇷 Français</button>
+                    <button onclick="setDemoLang('zh', this)" class="demo-tab-btn px-3.5 py-1.5 rounded-lg text-xs font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all">🇨🇳 中文</button>
+                </div>
+
+                <!-- Teaching Content Box -->
+                <div class="mt-6 p-6 sm:p-8 bg-slate-800/60 rounded-2xl border border-slate-700/60">
+                    <p id="demo-teaching-text" class="text-lg sm:text-xl text-slate-100 font-serif leading-relaxed italic">
+                        "{{ $demoEnsenanza->texto_original }}"
+                    </p>
+                </div>
+
+                <!-- Hidden translations data -->
+                <div id="demo-translations-store" class="hidden"
+                     data-es="{{ $demoEnsenanza->texto_original }}"
+                     data-en="{{ $demoEnsenanza->getTextoEnIdioma(2) ?? 'Do not focus on massive goals; focus on improving by 1% each day.' }}"
+                     data-pt="{{ $demoEnsenanza->getTextoEnIdioma(3) ?? 'Não se concentre em grandes objetivos; concentre-se em melhorar 1% a cada dia.' }}"
+                     data-fr="{{ $demoEnsenanza->getTextoEnIdioma(5) ?? 'Ne vous concentrez pas sur de grands objectifs ; concentrez-vous sur une amélioration de 1 % chaque jour.' }}"
+                     data-zh="{{ $demoEnsenanza->getTextoEnIdioma(7) ?? '不要只专注于宏伟的目标，每天进步1%即可。微小的改进会随着时间呈指数级累积。' }}">
+                </div>
+            </div>
+        @endif
+    </div>
+</section>
+
+<!-- Featured Books Showcase -->
+<section class="py-16 bg-slate-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-10">
+            <div>
+                <h2 class="text-3xl font-black text-slate-900 tracking-tight">{{ __('messages.featured_books') }}</h2>
+                <p class="text-slate-600 mt-1">Explora libros listos para suscribirte y aprender cada día.</p>
+            </div>
+            <a href="{{ route('explorar') }}" class="mt-4 sm:mt-0 text-sm font-bold text-brand-600 hover:text-brand-700">
+                Ver todos los libros →
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            @foreach($librosDestacados as $libro)
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-shadow flex flex-col justify-between">
+                    <div class="p-6">
+                        <div class="flex items-center gap-2 mb-3">
+                            @foreach($libro->tags as $tag)
+                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-brand-50 text-brand-700">
+                                    {{ $tag->icono }} {{ $tag->nombre }}
+                                </span>
+                            @endforeach
+                            <span class="text-xs font-medium text-slate-400 ml-auto">
+                                🌐 {{ $libro->idiomaOriginal ? $libro->idiomaOriginal->nombre : 'Español' }}
+                            </span>
+                        </div>
+
+                        <h3 class="text-xl font-bold text-slate-900 mb-1">{{ $libro->titulo }}</h3>
+                        <p class="text-sm text-slate-500 font-medium mb-3">por {{ $libro->autor }}</p>
+                        <p class="text-sm text-slate-600 line-clamp-3 leading-relaxed mb-4">
+                            {{ $libro->descripcion ?: 'Resumen estructurado y lecciones diarias extraídas con IA.' }}
+                        </p>
+                    </div>
+
+                    <div class="px-6 py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
+                        <span class="text-xs font-bold text-slate-600">📚 {{ $libro->cantidad_ensenanzas }} Lecciones</span>
+                        <a href="{{ route('libro.detalle', $libro->id) }}" class="px-3.5 py-1.5 text-xs font-bold text-brand-600 bg-white border border-brand-200 rounded-lg hover:bg-brand-50 transition-colors">
+                            {{ __('messages.read_teaching') }}
+                        </a>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+
+<!-- Pricing Plans Table -->
+<section class="py-16 bg-white border-t border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto mb-12">
+            <h2 class="text-3xl font-black text-slate-900 tracking-tight">{{ __('messages.pricing') }}</h2>
+            <p class="text-slate-600 mt-2">Elige el plan que mejor se adapte a tu ritmo de aprendizaje y lectura.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            @foreach($planes as $plan)
+                <div class="rounded-2xl border {{ $plan->id == 3 ? 'border-brand-500 shadow-xl ring-2 ring-brand-500/20 bg-brand-50/20' : 'border-slate-200 shadow-sm bg-white' }} p-6 flex flex-col justify-between">
+                    <div>
+                        @if($plan->id == 3)
+                            <span class="px-3 py-1 bg-brand-600 text-white text-[11px] font-extrabold uppercase tracking-wider rounded-full self-start mb-3 inline-block">Popular</span>
+                        @endif
+                        <h3 class="text-xl font-bold text-slate-900">{{ $plan->nombre }}</h3>
+                        <div class="mt-4 mb-6">
+                            <span class="text-4xl font-black text-slate-900">${{ number_format($plan->precio_mensual, 0) }}</span>
+                            <span class="text-xs text-slate-500 font-medium">/ mes</span>
+                        </div>
+
+                        <ul class="space-y-3 text-sm text-slate-600 mb-8">
+                            <li class="flex items-center gap-2">
+                                <span class="text-emerald-500 font-bold">✓</span>
+                                <span>Hasta <strong>{{ $plan->max_libros >= 999 ? 'Ilimitados' : $plan->max_libros }}</strong> libro(s) activo(s)</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <span class="text-emerald-500 font-bold">✓</span>
+                                <span>Hasta <strong>{{ $plan->max_idiomas }}</strong> idioma(s) por libro</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <span class="{{ $plan->permite_audio ? 'text-emerald-500' : 'text-slate-300' }} font-bold">{{ $plan->permite_audio ? '✓' : '—' }}</span>
+                                <span class="{{ $plan->permite_audio ? 'text-slate-700 font-medium' : 'text-slate-400' }}">Audio Text-to-Speech</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <span class="text-emerald-500 font-bold">✓</span>
+                                <span>Traducción instantánea con LLM</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <a href="{{ route('register', ['plan_id' => $plan->id]) }}" class="w-full py-2.5 px-4 text-center text-sm font-bold rounded-xl {{ $plan->id == 3 ? 'bg-brand-600 hover:bg-brand-700 text-white shadow-md' : 'bg-slate-100 hover:bg-slate-200 text-slate-800' }} transition-colors">
+                        Elegir {{ $plan->nombre }}
+                    </a>
+                </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+
+<!-- Suggest a Book / Feedback Section -->
+<section class="py-16 bg-slate-50 border-t border-slate-200">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-3xl font-black text-slate-900 tracking-tight">¿Tienes un libro en mente?</h2>
+        <p class="text-slate-600 mt-2 mb-8">Envíanos el título o sugerencia y nuestro motor de IA lo procesará.</p>
+
+        <form action="{{ route('sugerir.store') }}" method="POST" class="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200 text-left space-y-4">
+            @csrf
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Tu Email *</label>
+                    <input type="email" name="email" value="{{ auth()->check() ? auth()->user()->email : old('email') }}" required class="w-full px-3.5 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500" placeholder="tu@email.com">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Tipo de Mensaje</label>
+                    <select name="tipo_id" class="w-full px-3.5 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500">
+                        @foreach($tiposSugerencia as $t)
+                            <option value="{{ $t->id }}">{{ $t->nombre }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Libro Sugerido (opcional)</label>
+                <input type="text" name="libro_sugerido" class="w-full px-3.5 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500" placeholder="Ej: Meditaciones de Marco Aurelio">
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Mensaje o Comentarios *</label>
+                <textarea name="mensaje" rows="3" required class="w-full px-3.5 py-2 text-sm border border-slate-200 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500" placeholder="¿Por qué te gustaría ver este libro o qué mejora sugieres?"></textarea>
+            </div>
+
+            <button type="submit" class="w-full py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm rounded-xl shadow-md transition-colors">
+                Enviar Sugerencia
+            </button>
+        </form>
+    </div>
+</section>
+
+@push('scripts')
+<script>
+    let currentDemoLang = 'es';
+
+    function setDemoLang(langCode, btn) {
+        currentDemoLang = langCode;
+        const store = document.getElementById('demo-translations-store');
+        const textElement = document.getElementById('demo-teaching-text');
+
+        if (store && textElement) {
+            const text = store.getAttribute('data-' + langCode) || store.getAttribute('data-es');
+            textElement.innerText = '"' + text + '"';
+        }
+
+        document.querySelectorAll('.demo-tab-btn').forEach(b => {
+            b.classList.remove('bg-brand-600', 'text-white');
+            b.classList.add('bg-slate-800', 'text-slate-300');
+        });
+
+        btn.classList.remove('bg-slate-800', 'text-slate-300');
+        btn.classList.add('bg-brand-600', 'text-white');
+    }
+
+    function playCurrentDemoAudio() {
+        const textElement = document.getElementById('demo-teaching-text');
+        if (!textElement || !('speechSynthesis' in window)) {
+            alert('Tu navegador no soporta síntesis de voz.');
+            return;
+        }
+
+        const text = textElement.innerText;
+        const utterance = new SpeechSynthesisUtterance(text);
+        
+        const langMap = {
+            'es': 'es-ES',
+            'en': 'en-US',
+            'pt': 'pt-BR',
+            'fr': 'fr-FR',
+            'zh': 'zh-CN'
+        };
+        utterance.lang = langMap[currentDemoLang] || 'es-ES';
+        utterance.rate = 0.95;
+
+        window.speechSynthesis.cancel(); // Stop any ongoing speech
+        window.speechSynthesis.speak(utterance);
+    }
+</script>
+@endpush
+@endsection
