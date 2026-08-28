@@ -1,0 +1,7 @@
+1. Si voy a "http://localhost:3000/auth/register" y hago clic en el link de "Política de Uso" intenta ir a "http://localhost:3000/politica-de-uso" y muestra:
+```
+404
+This page could not be found.
+```
+
+2. Si intento registrar un usuario muestra "Error de conexión" ¿cómo debugueo este error?

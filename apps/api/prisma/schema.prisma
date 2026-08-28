@@ -1,0 +1,390 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+
+// ============================================
+// CATÁLOGOS BASE
+// ============================================
+
+model Cat_Planes {
+  id          Int      @id @default(autoincrement())
+  nombre      String
+  max_libros  Int
+  max_idiomas Int
+  permite_audio Boolean @default(false)
+  precio_mensual Decimal @db.Decimal(10, 2)
+  orden       Int
+  activo      Boolean  @default(true)
+  creado_en   DateTime @default(now())
+  actualizado_en DateTime @updatedAt
+
+  usuarios    Usuario[]
+
+  @@map("cat_planes")
+}
+
+model Cat_Idiomas {
+  id        Int      @id @default(autoincrement())
+  nombre    String
+  codigo    String   @unique // ISO code: es, en, pt, it, fr, de, zh, zh-TW
+  activo    Boolean  @default(true)
+  creado_en DateTime @default(now())
+  actualizado_en DateTime @updatedAt
+
+  libros_origen          Libro[]
+  traducciones           Traduccion[]
+  suscripcion_idiomas    Suscripcion_Idiomas[]
+  historial_envios       Historial_Envios[]
+
+  @@map("cat_idiomas")
+}
+
+model Cat_Frecuencias {
+  id                   Int      @id @default(autoincrement())
+  nombre               String
+  dias_entre_envios    Int
+  orden                Int
+  activo               Boolean  @default(true)
+  creado_en            DateTime @default(now())
+  actualizado_en       DateTime @updatedAt
+
+  usuarios             Usuario[]
+
+  @@map("cat_frecuencias")
+}
+
+model Cat_Estados_Suscripcion {
+  id          Int      @id @default(autoincrement())
+  nombre      String   @unique // Activo, Completado, Pausado
+  slug        String   @unique
+  descripcion String?
+  activo      Boolean  @default(true)
+  creado_en   DateTime @default(now())
+  actualizado_en DateTime @updatedAt
+
+  suscripciones Suscripcion[]
+
+  @@map("cat_estados_suscripcion")
+}
+
+model Cat_Estados_Envio {
+  id          Int      @id @default(autoincrement())
+  nombre      String   @unique // Pendiente, Entregado, Rebotado, Abierto, Fallido
+  slug        String   @unique
+  descripcion String?
+  activo      Boolean  @default(true)
+  creado_en   DateTime @default(now())
+  actualizado_en DateTime @updatedAt
+
+  historial_envios Historial_Envios[]
+
+  @@map("cat_estados_envio")
+}
+
+model Cat_Tags {
+  id    Int      @id @default(autoincrement())
+  nombre String
+  slug  String   @unique
+  icono String?
+  activo Boolean @default(true)
+  creado_en DateTime @default(now())
+  actualizado_en DateTime @updatedAt
+
+  libro_tags Libro_Tags[]
+
+  @@map("cat_tags")
+}
+
+model Cat_Tipos_Sugerencia {
+  id          Int      @id @default(autoincrement())
+  nombre      String
+  slug        String   @unique
+  descripcion String?
+  activo      Boolean  @default(true)
+  creado_en   DateTime @default(now())
+  actualizado_en DateTime @updatedAt
+
+  sugerencias Sugerencia[]
+
+  @@map("cat_tipos_sugerencia")
+}
+
+// ============================================
+// CATÁLOGOS DE PROVEEDORES (ROTATIVOS)
+// ============================================
+
+model AiCatalog {
+  id              Int      @id @default(autoincrement())
+  proveedor       String   @unique // gemini, groq, huggingface
+  tipo_uso        String   // generacion_enseñanzas, traduccion
+  modelo          String?
+  limite_tokens   Int?
+  limite_peticiones_diarias Int?
+  consumo_tokens  Int      @default(0)
+  consumo_peticiones_diarias Int @default(0)
+  fecha_renovacion DateTime?
+  prioridad       Int
+  estado          String   @default("activo") // activo, agotado, inactivo
+  activo          Boolean  @default(true)
+  creado_en       DateTime @default(now())
+  actualizado_en  DateTime @updatedAt
+
+  auditoria_ia    Auditoria_IA[]
+
+  @@map("ai_catalog")
+}
+
+model EmailCatalog {
+  id              Int      @id @default(autoincrement())
+  proveedor       String   @unique // resend, brevo, ses
+  limite_mensual  Int?
+  limite_diario   Int?
+  consumo_mensual Int     @default(0)
+  consumo_diario  Int     @default(0)
+  fecha_renovacion DateTime?
+  prioridad       Int
+  estado          String   @default("activo") // activo, agotado, inactivo
+  activo          Boolean  @default(true)
+  creado_en       DateTime @default(now())
+  actualizado_en  DateTime @updatedAt
+
+  @@map("email_catalog")
+}
+
+model PaymentProviders {
+  id         Int      @id @default(autoincrement())
+  proveedor  String   @unique // mercadopago, paypal, stripe
+  activo     Boolean  @default(true)
+  prioridad  Int
+  region     String?  // AR, US, EU, GLOBAL
+  configuracion Json?
+  creado_en  DateTime @default(now())
+  actualizado_en DateTime @updatedAt
+
+  @@map("payment_providers")
+}
+
+// ============================================
+// ENTIDADES PRINCIPALES
+// ============================================
+
+model Usuario {
+  id                      Int      @id @default(autoincrement())
+  email                   String   @unique
+  nombre                  String
+  password                String?
+  google_id               String?  @unique
+  plan_id                 Int
+  frecuencia_id           Int
+  zona_horaria            String   @default("UTC")
+  hora_envio              Int      @default(9) // 0-23
+  canal_entrega           String   @default("email") // email, in_app, ambos
+  activo                  Boolean  @default(true)
+  fecha_registro          DateTime @default(now())
+  ultimo_acceso           DateTime?
+  role                    String   @default("usuario") // usuario, administrador
+
+  plan                    Cat_Planes        @relation(fields: [plan_id], references: [id])
+  frecuencia             Cat_Frecuencias  @relation(fields: [frecuencia_id], references: [id])
+
+  legal_acceptances       UserLegalAcceptance[]
+  suscripciones           Suscripcion[]
+  historial_envios        Historial_Envios[]
+  sugerencias             Sugerencia[]
+
+  @@map("usuarios")
+}
+
+model UserLegalAcceptance {
+  id               Int      @id @default(autoincrement())
+  usuario_id       Int
+  version_politica String
+  fecha_hora       DateTime @default(now())
+  ip_address       String?
+  user_agent       String?
+
+  usuario          Usuario  @relation(fields: [usuario_id], references: [id], onDelete: Cascade)
+
+  @@unique([usuario_id, version_politica])
+  @@map("user_legal_acceptance")
+}
+
+model Libro {
+  id                    Int      @id @default(autoincrement())
+  titulo                String
+  autor                 String
+  isbn                  String?  @unique
+  idioma_original_id    Int
+  anio_publicacion      Int?
+  portada_url           String?
+  google_books_id       String?  @unique
+  cantidad_ensenanzas   Int      @default(0)
+  estado                String   @default("borrador_ia_pendiente_revision")
+  activo                Boolean  @default(true)
+  creado_en             DateTime @default(now())
+  actualizado_en        DateTime @updatedAt
+
+  idioma_original       Cat_Idiomas @relation(fields: [idioma_original_id], references: [id])
+
+  ensenanzas            Ensenanza[]
+  libro_tags            Libro_Tags[]
+  suscripciones         Suscripcion[]
+
+  @@map("libros")
+}
+
+model Libro_Tags {
+  id       Int      @id @default(autoincrement())
+  libro_id Int
+  tag_id   Int
+
+  libro    Libro    @relation(fields: [libro_id], references: [id], onDelete: Cascade)
+  tag      Cat_Tags @relation(fields: [tag_id], references: [id], onDelete: Cascade)
+
+  @@unique([libro_id, tag_id])
+  @@map("libro_tags")
+}
+
+model Ensenanza {
+  id            Int      @id @default(autoincrement())
+  libro_id      Int
+  orden         Int
+  texto_original String
+  tema          String?
+  estado        String   @default("generado_por_ia_pendiente_revision")
+  version       Int      @default(1)
+  fecha_generacion DateTime?
+  fecha_aprobacion DateTime?
+  aprobado_por   Int?
+  creado_en     DateTime @default(now())
+  actualizado_en DateTime @updatedAt
+
+  libro         Libro         @relation(fields: [libro_id], references: [id], onDelete: Cascade)
+  traducciones  Traduccion[]
+  historial_envios Historial_Envios[]
+
+  @@unique([libro_id, orden])
+  @@map("ensenanzas")
+}
+
+model Traduccion {
+  id               Int      @id @default(autoincrement())
+  ensenanza_id     Int
+  idioma_id        Int
+  texto_traducido  String
+  fecha_traduccion DateTime @default(now())
+  veces_usado      Int      @default(0)
+  ultimo_uso       DateTime?
+  version          Int      @default(1)
+
+  ensenanza        Ensenanza @relation(fields: [ensenanza_id], references: [id], onDelete: Cascade)
+  idioma           Cat_Idiomas @relation(fields: [idioma_id], references: [id])
+
+  @@unique([ensenanza_id, idioma_id], name: "ensenanza_id_idioma_id")
+  @@map("traducciones")
+}
+
+model Suscripcion {
+  id                       Int      @id @default(autoincrement())
+  usuario_id               Int
+  libro_id                 Int
+  estado_id                Int
+  ultima_ensenanza_enviada Int?
+  fecha_proximo_envio      DateTime?
+  fecha_inicio             DateTime @default(now())
+  fecha_fin                DateTime?
+  porcentaje_avance        Float    @default(0)
+  activo                   Boolean  @default(true)
+  creado_en                DateTime @default(now())
+  actualizado_en           DateTime @updatedAt
+
+  usuario                  Usuario                  @relation(fields: [usuario_id], references: [id], onDelete: Cascade)
+  libro                    Libro                    @relation(fields: [libro_id], references: [id], onDelete: Cascade)
+  estado                   Cat_Estados_Suscripcion  @relation(fields: [estado_id], references: [id])
+  suscripcion_idiomas     Suscripcion_Idiomas[]
+
+  @@unique([usuario_id, libro_id])
+  @@map("suscripciones")
+}
+
+model Suscripcion_Idiomas {
+  id             Int      @id @default(autoincrement())
+  suscripcion_id Int
+  idioma_id      Int
+
+  suscripcion    Suscripcion @relation(fields: [suscripcion_id], references: [id], onDelete: Cascade)
+  idioma         Cat_Idiomas @relation(fields: [idioma_id], references: [id], onDelete: Cascade)
+
+  @@unique([suscripcion_id, idioma_id])
+  @@map("suscripcion_idiomas")
+}
+
+model Historial_Envios {
+  id          Int      @id @default(autoincrement())
+  usuario_id  Int
+  ensenanza_id Int
+  idioma_id   Int
+  estado_id   Int
+  fecha_envio DateTime @default(now())
+  canal       String
+  proveedor_email String?
+  error       String?
+
+  usuario     Usuario                 @relation(fields: [usuario_id], references: [id])
+  ensenanza   Ensenanza               @relation(fields: [ensenanza_id], references: [id])
+  idioma      Cat_Idiomas             @relation(fields: [idioma_id], references: [id])
+  estado      Cat_Estados_Envio       @relation(fields: [estado_id], references: [id])
+
+  @@map("historial_envios")
+}
+
+model Sugerencia {
+  id                Int      @id @default(autoincrement())
+  usuario_id        Int?
+  email             String?
+  tipo_id           Int
+  libro_sugerido    String?
+  mensaje           String
+  leido             Boolean  @default(false)
+  atendido          Boolean  @default(false)
+  fecha_envio       DateTime @default(now())
+  respuesta_admin   String?
+  fecha_respuesta   DateTime?
+
+  usuario           Usuario?               @relation(fields: [usuario_id], references: [id])
+  tipo              Cat_Tipos_Sugerencia   @relation(fields: [tipo_id], references: [id])
+
+  @@map("sugerencias")
+}
+
+// ============================================
+// AUDITORÍA Y SEGURIDAD
+// ============================================
+
+model Auditoria_IA {
+  id            Int      @id @default(autoincrement())
+  ai_catalog_id Int
+  proveedor     String
+  modelo        String
+  cuota_usada   Int
+  tokens_usados Int?
+  solicitud     Json
+  resultado     Json?
+  error         String?
+  exitoso       Boolean
+  fecha         DateTime @default(now())
+
+  ai_catalog    AiCatalog @relation(fields: [ai_catalog_id], references: [id])
+
+  @@map("auditoria_ia")
+}
+

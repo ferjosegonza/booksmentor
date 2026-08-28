@@ -1,0 +1,169 @@
+Ademas ten en cuenta todo lo siguiente:
+* antes de ponerte a trabajar dime si encuentras inconsistencias o contradicciones o cualquier otra duda que quieras aclarar antes de ponerte a trabajar.
+* debe guardarse en la base de datos cada extracción y traducción realizada para evitar tener que procesar otra vez el mismo pedido si otro usuario lo vuelve a pedir.
+* que se pueda utilizar en versión web y mobile
+* que el usuario pueda tipear el nombre de un libro, y que el sistema busque en alguna API o base de datos gratuita para sugerir completar el nombre de lo que tipea el usuario, porque el sistema tiene que asegurarse de obtener los datos que considere necesarios para después poder encontrarlo en internet y saber que es un libro que existe y después va a poder procesarlo.
+* además de ingresar un libro que el administrador del sistema pueda clasificar al usuario para especificar cuantos libros pueda ingresar según el tipo de cuenta que le adjudica a cada usuario.
+* debe crearse un TODO.md para tenerlo como control de avance del proyecto, llevando un registro de todo lo que el sistema tiene en calidad de "completado" o "pediente" así a medida que se avanza se pasan de "pendiente" a "completado".
+* debe crearse un README.md que explique cómo instalarlo.
+
+## 📌 PROMPT DESCRIPTIVO DEL PROYECTO
+
+### 📖 Resumen Ejecutivo
+
+**"Sistema de Envío de Enseñanzas por Suscripción"**
+
+Un sistema completo de gestión de usuarios que permite recibir enseñanzas de libros de forma personalizada, mediante suscripciones con selección de idioma, frecuencia de envío y seguimiento de progreso.
+
+---
+
+### 🎯 Propósito del Sistema
+
+El sistema fue diseñado para ayudar a los usuarios a aprender y reflexionar sobre enseñanzas de libros de manera progresiva y personalizada. Permite seleccionar libros de interés, elegir el idioma en que desean recibir el contenido, definir la frecuencia de los envíos, y hacer seguimiento de su avance a medida que reciben las enseñanzas una por una.
+
+---
+
+### 👥 Actores del Sistema
+
+| Actor | Rol |
+|-------|-----|
+| **Usuarios registrados** | Personas que se suscriben para recibir enseñanzas de libros por correo electrónico, pueden dar de alta libros (que el sistema chequea que existan y luego lo carga en la base de datos), su mail, los idiomas en que quiere recibir las traducciones y la frecuencia de los mails |
+| **Administradores** | Sólo en caso de necesidad pueden gestionar el catálogo de libros, idiomas, planes, y supervisan el feedback de los usuarios |
+| **Sistema (automático)** | Procesa envíos programados, genera traducciones y actualiza estados |
+
+---
+
+### 📋 Funcionalidades Principales
+
+#### 1. Gestión de Usuarios
+- Registro de usuarios con email y nombre
+- Selección de plan de suscripción (Gratuito, Básico, Pro, Premium)
+- Configuración de preferencias: frecuencia de envío, horario y zona horaria
+- Activación/desactivación de cuenta
+
+#### 2. Catálogo de Libros
+- Administración de libros con: título, autor, idioma original, año de publicación
+- Asignación de etiquetas temáticas (Productividad, Liderazgo, Finanzas, etc.)
+- Extracción de enseñanzas individuales de cada libro
+- Cada libro contiene múltiples enseñanzas ordenadas secuencialmente
+
+#### 3. Sistema de Traducción
+- Las enseñanzas se almacenan en su idioma original
+- Traducción automática a múltiples idiomas
+- Cache de traducciones para reutilización eficiente
+- Cada usuario elige en qué idioma quiere recibir cada libro
+
+#### 4. Suscripciones Personalizadas
+- Cada usuario puede suscribirse a múltiples libros
+- Selección independiente de idioma para cada libro
+- Seguimiento del progreso: última enseñanza enviada y porcentaje de avance
+- Estados: Activo, Completado, Pausado
+
+#### 5. Envío Programado de Enseñanzas
+- Envío automático de una enseñanza por vez según la frecuencia elegida
+- Frecuencias disponibles: Diaria, Solo laborables, Semanal, Mensual
+- Programación según zona horaria del usuario
+- Historial completo de todos los envíos realizados
+
+#### 6. Feedback y Sugerencias
+- Los usuarios pueden enviar:
+  - Sugerencias de nuevos libros
+  - Reportes de errores
+  - Propuestas de mejora
+  - Preguntas o consultas
+- Seguimiento administrativo de sugerencias (leído, atendido, respuesta)
+
+---
+
+### 🔄 Flujo de Uso del Sistema
+
+1. **Usuario se registra** → Completa sus datos y preferencias iniciales
+
+2. **Explora el catálogo** → Busca libros que le interesen
+
+3. **Se suscribe a un libro** → Elige el idioma de recepción y la frecuencia de envío
+
+4. **Recibe enseñanzas** → Cada día (o según su frecuencia) recibe una enseñanza por correo electrónico
+
+5. **Avance progresivo** → A medida que recibe enseñanzas, su porcentaje de avance aumenta
+
+6. **Completa el libro** → Cuando recibe la última enseñanza, la suscripción pasa a estado "Completado"
+
+7. **Pausa o retoma** → Puede pausar una suscripción y retomarla cuando desee
+
+8. **Envía sugerencias** → Puede recomendar libros o reportar problemas
+
+---
+
+### 📊 Módulos del Sistema
+
+| Módulo | Descripción |
+|--------|-------------|
+| **Usuarios** | Registro, autenticación, gestión de perfiles y preferencias |
+| **Catálogos** | Gestión de: frecuencias, planes, idiomas, tags, estados |
+| **Libros** | Administración del catálogo de libros y sus enseñanzas |
+| **Traducciones** | Generación y cache de traducciones de enseñanzas |
+| **Suscripciones** | Gestión de suscripciones, progreso y estados |
+| **Envíos** | Programación y ejecución de envíos de correos electrónicos |
+| **Sugerencias** | Recepción y gestión de feedback de usuarios |
+| **Dashboard** | Panel de control para administradores |
+
+---
+
+### 🗃️ Estructura de Datos del Sistema
+
+El sistema se organiza en torno a tres tipos de tablas:
+
+1. **Catálogos** (7 tablas): Frecuencias, Planes, Idiomas, Tags, Estados de Suscripción, Estados de Envío, Tipos de Sugerencia
+
+2. **Entidades Principales** (4 tablas): Usuarios, Libros, Enseñanzas, Suscripciones
+
+3. **Relaciones y Transacciones** (5 tablas): Libro_Tags, Suscripcion_Idiomas, Traducciones, Historial_Envíos, Sugerencias_Usuarios
+
+---
+
+### 🎨 Beneficios para el Usuario
+
+- **Aprendizaje progresivo**: Recibe contenido en pequeñas dosis, ideal para reflexión diaria
+- **Personalización total**: Elige idioma, frecuencia y horario de recepción
+- **Flexibilidad**: Puede pausar, retomar y cambiar de libro en cualquier momento
+- **Seguimiento visual**: Ve claramente su progreso en cada libro
+- **Sin barreras de idioma**: Recibe enseñanzas en su idioma preferido
+
+---
+
+### 🔧 Beneficios para el Administrador
+
+- **Gestión centralizada**: Todos los catálogos y configuraciones en un solo lugar
+- **Escalabilidad**: Agregar nuevos idiomas, planes o libros es simple
+- **Visibilidad completa**: Historial de envíos y seguimiento de usuarios
+- **Feedback organizado**: Sugerencias clasificadas y con seguimiento
+
+---
+
+### 📌 Resumen de Entidades
+
+| Entidad | Propósito |
+|---------|-----------|
+| **Usuarios** | Personas que reciben enseñanzas |
+| **Libros** | Obras de las que se extraen enseñanzas |
+| **Enseñanzas** | Lecciones individuales extraídas de cada libro |
+| **Traducciones** | Cache de enseñanzas traducidas a otros idiomas |
+| **Suscripciones** | Relación usuario-libro con progreso y estado |
+| **Historial de Envíos** | Auditoría de todos los emails enviados |
+| **Sugerencias** | Feedback de los usuarios sobre el sistema |
+
+---
+
+### 🌟 Características Destacadas
+
+- **Multilenguaje**: Soporte para múltiples idiomas con cache de traducciones
+- **Programación inteligente**: Envíos según zona horaria y frecuencia del usuario
+- **Escalable**: Arquitectura que permite agregar nuevos libros e idiomas fácilmente
+- **Auditable**: Registro completo de todos los envíos realizados
+- **Interactivo**: Los usuarios pueden sugerir libros y reportar problemas
+- **Progresivo**: Seguimiento paso a paso del avance en cada libro
+
+---
+
+Este sistema está diseñado para ser una plataforma de aprendizaje automatizada, que entrega conocimiento de libros de forma personalizada, programada y en el idioma que cada usuario prefiera.

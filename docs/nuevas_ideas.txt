@@ -1,0 +1,9 @@
+VERIFICAR SI LA DOCUMENTACION DEL PROYECTO CONTEMPLA LO SIGUIENTE (en el documento que corresponda):
+
+Preguntar que se revise la documentación para verificar si la iteración sobre el uso de IA y servicios de mail se hace de a uno por vez, es decir: cada vez que se realiza una traducción y se usa un servicio de IA, en la siguiente vez se procura utilizar el siguiente servicio de IA que se tenga en el catálogo, el mismo criterio con los servicios de email, cuando se utiliza uno de los servicios de email del catálogo de servicios de email el próximo email se procura utilizar el siguiente servicio de email en el catálogo. Todo esto a efectos de espaciar lo máximo posible el uso de un mismo servicio y evitar un bloqueo.
+
+Verificar que se cumpla el proceso de que cuando un usuario busca un libro:
+1. el sistema busca en la base de datos propia si existe el libro.
+2. si no existe el libro, el sistema busca en la opción externa es decir Google Books API y se pide a la IA una extracción de las enseñanzas de ese libro en los idiomas que haya pedido el usuario y se almacenan todas las traducciones en la base de datos propia.
+3. si existe el libro en la base de datos propia, el sistema busca si existen las traducciones en el o los idiomas que pidió el usuario.
+4. de todas las traducciones que pueda haber pedido el usuario, las traducciones que no existen en la base de datos pero existen extracciones de enseñanzas del libro en otros idiomas, se usa IA sólo para generar las traducciones faltantes, no para volver a pedir a la IA extracciones de enseñanzas del libro. Las traducciones que haya pedido el usuario y ya existan en la base de datos simplemente se reutilizan.
