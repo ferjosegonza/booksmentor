@@ -9,9 +9,13 @@ import { TranslationsModule } from '../translations/translations.module';
   imports: [
     SubscriptionsModule,
     TranslationsModule,
-    BullModule.registerQueue({
-      name: 'deliveries',
-    }),
+    ...(process.env.USE_REDIS === 'true'
+      ? [
+          BullModule.registerQueue({
+            name: 'deliveries',
+          }),
+        ]
+      : []),
   ],
   controllers: [DeliveriesController],
   providers: [DeliveriesService],

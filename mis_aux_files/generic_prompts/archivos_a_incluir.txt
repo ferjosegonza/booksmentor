@@ -1,0 +1,18 @@
+Ten en cuenta estos archivos para lo que te pido:
+
+# arquitectura y stack general.
+\booksmentor\README.md
+
+# módulos registrados en la API.
+\booksmentor\apps\api\src\app.module.ts
+
+# arranque, pipes, CORS y configuración global.
+\booksmentor\apps\api\src\main.ts
+
+# modelos y relaciones de base de datos.
+\booksmentor\apps\api\prisma\schema.prisma
+
+quiero que revises no sólo la documentación sino los archivos de código y veas si se condicen y corresponden entre sí y me ayudes a contestar esto a un amigo: "Ahi clone el repo y estuve tratando que arranque pero no tuve suerte por el momento, estuve usando pnpm en lugar de npm y pensé que iba a ser transparente pero no, ahi estoy tratando de instalar turbo con npm.
+Lo que note en package.json es que no están instaladas las ultimas versiones disponibles, supongo por el tema de la fecha limite del entrenamiento de la IA que usaste para generar todo esto.
+Después me interesa que me cuentes paso a paso como fue el proceso que usaste para generar todo esto y que IAs estas usando, así trato de seguir el mismo procedimiento."
+además dime qué me falta para poner en funcionamiento y empezar a probar que algo funcione, quiero que veas la forma totalmente gratuita y mejor estrategia para que más fácilmente funcione, quiero probar algo un ciclo completo del software, si hay api gratuita o lo que sea dime qué falta configurar y hacer para que funcione al menos una parte del proyecto al menos una de cada alternativa de IA para transcripcion y al menos una de las alternativas para mail

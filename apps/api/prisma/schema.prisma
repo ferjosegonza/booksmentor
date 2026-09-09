@@ -187,7 +187,7 @@ model Usuario {
   frecuencia_id           Int
   zona_horaria            String   @default("UTC")
   hora_envio              Int      @default(9) // 0-23
-  canal_entrega           String   @default("email") // email, in_app, ambos
+  canal_entrega           String   @default("in_app") // in_app
   activo                  Boolean  @default(true)
   fecha_registro          DateTime @default(now())
   ultimo_acceso           DateTime?

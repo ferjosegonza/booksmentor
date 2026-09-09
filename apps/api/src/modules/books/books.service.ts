@@ -27,8 +27,8 @@ export class BooksService {
     const localBooks = await this.prisma.libro.findMany({
       where: {
         OR: [
-          { titulo: { contains: query, mode: 'insensitive' } },
-          { autor: { contains: query, mode: 'insensitive' } },
+          { titulo: { contains: query } },
+          { autor: { contains: query } },
         ],
         activo: true,
       },
@@ -54,7 +54,7 @@ export class BooksService {
         type: 'local',
         title: book.titulo,
         author: book.autor,
-        year: book.año_publicacion,
+        year: book.anio_publicacion,
         cover: book.portada_url,
         isbn: book.isbn,
         googleBooksId: book.google_books_id,
@@ -119,7 +119,7 @@ export class BooksService {
         autor: googleBook.volumeInfo.authors?.[0] || 'Unknown',
         isbn: isbn || null,
         idioma_original_id: language.id,
-        año_publicacion: googleBook.volumeInfo.publishedDate?.substring(0, 4)
+        anio_publicacion: googleBook.volumeInfo.publishedDate?.substring(0, 4)
           ? parseInt(googleBook.volumeInfo.publishedDate.substring(0, 4))
           : null,
         portada_url: googleBook.volumeInfo.imageLinks?.thumbnail || null,
@@ -140,7 +140,7 @@ export class BooksService {
         libro_tags: {
           include: { tag: true },
         },
-        enseñanzas: {
+        ensenanzas: {
           where: { estado: 'aprobado' },
           orderBy: { orden: 'asc' },
         },

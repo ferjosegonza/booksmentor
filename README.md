@@ -18,7 +18,7 @@ BookMentor es un monorepo que contiene:
 - **Framework**: NestJS (TypeScript)
 - **Base de datos**: MySQL 8.0+
 - **ORM**: Prisma
-- **Colas**: BullMQ + Redis
+- **Colas**: BullMQ + Redis opcionales para trabajos programados
 - **Autenticación**: Passport + Google OAuth
 - **IA**: Google Gemini, Groq, Hugging Face (catálogo rotativo)
 - **Email**: Resend, Brevo, Amazon SES (catálogo rotativo)
@@ -41,7 +41,6 @@ BookMentor es un monorepo que contiene:
 - Node.js >= 18.0.0
 - npm >= 9.0.0
 - MySQL >= 8.0
-- Redis >= 6
 - Git
 
 ## 🔧 Instalación
@@ -126,15 +125,11 @@ npx prisma db seed
 
 Esto creará los catálogos base (planes, idiomas, frecuencias, tags, proveedores).
 
-### 5. Iniciar Redis
+### 5. Redis opcional
 
-```bash
-# En sistemas Unix/Linux con Redis instalado
-redis-server
+Redis no es necesario para levantar la aplicación ni para probar una entrega manual dentro de la plataforma. El modo local usa `USE_REDIS="false"` y permite procesar una entrega mediante el endpoint de prueba documentado en `docs/PUESTA_EN_MARCHA_LOCAL.md`.
 
-# En Windows, puedes usar WSL o Docker
-docker run -d -p 6379:6379 redis
-```
+Redis sólo es necesario si se quieren activar las colas programadas de BullMQ. En ese caso se debe establecer `USE_REDIS="true"` y configurar un servidor Redis accesible.
 
 ## 🎯 Desarrollo
 
@@ -295,9 +290,7 @@ Verifica que:
 
 ### Error de conexión a Redis
 
-Verifica que:
-- Redis esté corriendo
-- Las configuraciones REDIS_HOST y REDIS_PORT sean correctas
+Verifica que `USE_REDIS` esté en `false` para el modo local simple. Si se activan las colas programadas, comprueba también `REDIS_HOST` y `REDIS_PORT`.
 
 ### Error de migraciones Prisma
 

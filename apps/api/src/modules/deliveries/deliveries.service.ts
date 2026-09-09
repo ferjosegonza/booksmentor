@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, Optional } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bull';
 import { Queue } from 'bull';
 import { PrismaService } from '../../common/prisma/prisma.service';
@@ -146,7 +146,7 @@ export class DeliveriesService {
   private emailProviders: Map<string, EmailProvider> = new Map();
 
   constructor(
-    @InjectQueue('deliveries') private deliveriesQueue: Queue,
+    @Optional() @InjectQueue('deliveries') private deliveriesQueue: Queue,
     private prisma: PrismaService,
     private subscriptionsService: SubscriptionsService,
     private translationsService: TranslationsService,
@@ -230,6 +230,11 @@ export class DeliveriesService {
   }
 
   private async processDeliveriesQueue() {
+    if (!this.deliveriesQueue) {
+      this.logger.log('Redis disabled: deliveries will be processed manually');
+      return;
+    }
+
     this.deliveriesQueue.process(async (job) => {
       this.logger.log(`Processing delivery job: ${job.id}`);
       
@@ -246,6 +251,11 @@ export class DeliveriesService {
   }
 
   async scheduleDelivery(subscriptionId: number, deliveryDate: Date) {
+    if (!this.deliveriesQueue) {
+      this.logger.log(`Redis disabled: delivery ${subscriptionId} was not scheduled`);
+      return;
+    }
+
     await this.deliveriesQueue.add(
       'send-delivery',
       { subscriptionId },
@@ -258,6 +268,11 @@ export class DeliveriesService {
         },
       },
     );
+  }
+
+  async processDeliveryNow(subscriptionId: number) {
+    await this.processScheduledDelivery(subscriptionId);
+    return { processed: true, subscriptionId };
   }
 
   private async processScheduledDelivery(subscriptionId: number) {
@@ -285,33 +300,21 @@ export class DeliveriesService {
       return;
     }
 
-    // Get delivery channels
-    const channels = subscription.usuario.canal_entrega;
+    // Deliveries are read exclusively in the platform.
+    const channels = 'in_app';
 
     // Process each language
     for (const subIdioma of subscription.suscripcion_idiomas) {
-      const translatedText = await this.translationsService.getOrGenerateTranslation(
+      await this.translationsService.getOrGenerateTranslation(
         nextTeaching.id,
         subIdioma.idioma_id,
       );
 
-      if (channels === 'email' || channels === 'ambos') {
-        await this.sendEmailDelivery(
-          subscription.usuario.email,
-          subscription.libro.titulo,
-          nextTeaching,
-          translatedText,
-          subIdioma.idioma.nombre,
-        );
-      }
-
-      if (channels === 'in_app' || channels === 'ambos') {
-        await this.sendPushNotification(
-          subscription.usuario.id,
-          subscription.libro.titulo,
-          nextTeaching.tema || 'Nueva enseñanza disponible',
-        );
-      }
+      await this.sendPushNotification(
+        subscription.usuario.id,
+        subscription.libro.titulo,
+        nextTeaching.tema || 'Nueva enseñanza disponible',
+      );
 
       // Record delivery
       const deliveredState = await this.prisma.cat_Estados_Envio.findFirst({
@@ -322,7 +325,7 @@ export class DeliveriesService {
         await this.prisma.historial_Envios.create({
           data: {
             usuario_id: subscription.usuario_id,
-            enseñanza_id: nextTeaching.id,
+            ensenanza_id: nextTeaching.id,
             idioma_id: subIdioma.idioma_id,
             estado_id: deliveredState.id,
             canal: channels,
@@ -335,7 +338,7 @@ export class DeliveriesService {
     await this.prisma.suscripcion.update({
       where: { id: subscriptionId },
       data: {
-        ultima_enseñanza_enviada: nextTeaching.orden,
+        ultima_ensenanza_enviada: nextTeaching.orden,
       },
     });
 
@@ -411,17 +414,30 @@ export class DeliveriesService {
   }
 
   async getDeliveryHistory(userId: number) {
-    return this.prisma.historial_Envios.findMany({
+    const history = await this.prisma.historial_Envios.findMany({
       where: { usuario_id: userId },
       include: {
-        enseñanza: {
-          include: { libro: true },
+        ensenanza: {
+          include: {
+            libro: true,
+            traducciones: {
+              include: { idioma: true },
+            },
+          },
         },
         idioma: true,
         estado: true,
       },
       orderBy: { fecha_envio: 'desc' },
     });
+
+    return history.map((delivery) => ({
+      ...delivery,
+      contenido:
+        delivery.ensenanza.traducciones.find(
+          (translation) => translation.idioma_id === delivery.idioma_id,
+        )?.texto_traducido || delivery.ensenanza.texto_original,
+    }));
   }
 
   async rescheduleAllDeliveries() {

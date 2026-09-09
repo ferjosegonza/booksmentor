@@ -23,7 +23,7 @@ export class AdminService {
 
   // Teaching Review and Approval
   async getPendingTeachings() {
-    return this.prisma.enseñanza.findMany({
+    return this.prisma.ensenanza.findMany({
       where: { estado: 'generado_por_ia_pendiente_revision' },
       include: {
         libro: {
@@ -37,7 +37,7 @@ export class AdminService {
   async approveTeaching(teachingId: number, adminId: number) {
     await this.checkAdminRole(adminId);
 
-    const teaching = await this.prisma.enseñanza.findUnique({
+    const teaching = await this.prisma.ensenanza.findUnique({
       where: { id: teachingId },
       include: { libro: true },
     });
@@ -47,7 +47,7 @@ export class AdminService {
     }
 
     // Update teaching status
-    const updatedTeaching = await this.prisma.enseñanza.update({
+    const updatedTeaching = await this.prisma.ensenanza.update({
       where: { id: teachingId },
       data: {
         estado: 'aprobado',
@@ -57,7 +57,7 @@ export class AdminService {
     });
 
     // Check if all teachings for this book are approved
-    const allTeachings = await this.prisma.enseñanza.findMany({
+    const allTeachings = await this.prisma.ensenanza.findMany({
       where: { libro_id: teaching.libro_id },
     });
 
@@ -76,7 +76,7 @@ export class AdminService {
   async rejectTeaching(teachingId: number, adminId: number, reason?: string) {
     await this.checkAdminRole(adminId);
 
-    const teaching = await this.prisma.enseñanza.findUnique({
+    const teaching = await this.prisma.ensenanza.findUnique({
       where: { id: teachingId },
     });
 
@@ -84,7 +84,7 @@ export class AdminService {
       throw new NotFoundException('Teaching not found');
     }
 
-    return this.prisma.enseñanza.update({
+    return this.prisma.ensenanza.update({
       where: { id: teachingId },
       data: {
         estado: 'rechazado',
@@ -95,7 +95,7 @@ export class AdminService {
   async regenerateTeaching(teachingId: number, adminId: number) {
     await this.checkAdminRole(adminId);
 
-    const teaching = await this.prisma.enseñanza.findUnique({
+    const teaching = await this.prisma.ensenanza.findUnique({
       where: { id: teachingId },
       include: { libro: true },
     });
@@ -112,7 +112,7 @@ export class AdminService {
     );
 
     // Update teaching
-    return this.prisma.enseñanza.update({
+    return this.prisma.ensenanza.update({
       where: { id: teachingId },
       data: {
         texto_original: newTeachingText,
@@ -126,7 +126,7 @@ export class AdminService {
   async editTeaching(teachingId: number, adminId: number, newText: string) {
     await this.checkAdminRole(adminId);
 
-    const teaching = await this.prisma.enseñanza.findUnique({
+    const teaching = await this.prisma.ensenanza.findUnique({
       where: { id: teachingId },
     });
 
@@ -134,7 +134,7 @@ export class AdminService {
       throw new NotFoundException('Teaching not found');
     }
 
-    return this.prisma.enseñanza.update({
+    return this.prisma.ensenanza.update({
       where: { id: teachingId },
       data: {
         texto_original: newText,
@@ -172,22 +172,22 @@ export class AdminService {
   async updateCatalogItem(catalog: string, id: number, data: any) {
     await this.checkAdminRole(0); // Will be implemented with proper admin check
 
-    const catalogMap: any = {
-      planes: 'cat_Planes',
-      idiomas: 'cat_Idiomas',
-      frecuencias: 'cat_Frecuencias',
-      estadosSuscripcion: 'cat_Estados_Suscripcion',
-      estadosEnvio: 'cat_Estados_Envio',
-      tags: 'cat_Tags',
-      tiposSugerencia: 'cat_Tipos_Sugerencia',
+    const catalogDelegates: Record<string, any> = {
+      planes: this.prisma.cat_Planes,
+      idiomas: this.prisma.cat_Idiomas,
+      frecuencias: this.prisma.cat_Frecuencias,
+      estadosSuscripcion: this.prisma.cat_Estados_Suscripcion,
+      estadosEnvio: this.prisma.cat_Estados_Envio,
+      tags: this.prisma.cat_Tags,
+      tiposSugerencia: this.prisma.cat_Tipos_Sugerencia,
     };
 
-    const modelName = catalogMap[catalog];
-    if (!modelName) {
+    const catalogDelegate = catalogDelegates[catalog];
+    if (!catalogDelegate) {
       throw new NotFoundException('Catalog not found');
     }
 
-    return this.prisma[modelName].update({
+    return catalogDelegate.update({
       where: { id },
       data,
     });
@@ -247,7 +247,7 @@ export class AdminService {
       this.prisma.usuario.count({ where: { activo: true } }),
       this.prisma.libro.count(),
       this.prisma.libro.count({ where: { estado: 'aprobado' } }),
-      this.prisma.enseñanza.count({ where: { estado: 'generado_por_ia_pendiente_revision' } }),
+      this.prisma.ensenanza.count({ where: { estado: 'generado_por_ia_pendiente_revision' } }),
       this.prisma.suscripcion.count(),
       this.prisma.suscripcion.count({ where: { estado_id: 1, activo: true } }),
       this.prisma.historial_Envios.count({

@@ -21,7 +21,7 @@ export class SubscriptionsService {
     // Check if book exists and is approved
     const book = await this.prisma.libro.findUnique({
       where: { id: bookId },
-      include: { enseñanzas: true },
+      include: { ensenanzas: true },
     });
 
     if (!book) {
@@ -66,8 +66,8 @@ export class SubscriptionsService {
         usuario_id: userId,
         libro_id: bookId,
         estado_id: activeState.id,
-        ultima_enseñanza_enviada: null,
-        fecha_proximo_envio: this.calculateNextDeliveryDate(userId),
+        ultima_ensenanza_enviada: null,
+        fecha_proximo_envio: await this.calculateNextDeliveryDate(userId),
         porcentaje_avance: 0,
       },
       include: {
@@ -167,7 +167,7 @@ export class SubscriptionsService {
       },
       data: {
         estado_id: activeState.id,
-        fecha_proximo_envio: this.calculateNextDeliveryDate(userId),
+        fecha_proximo_envio: await this.calculateNextDeliveryDate(userId),
       },
     });
   }
@@ -220,8 +220,8 @@ export class SubscriptionsService {
       throw new NotFoundException('Subscription not found');
     }
 
-    const totalTeachings = subscription.libro.cantidad_enseñanzas;
-    const currentTeaching = subscription.ultima_enseñanza_enviada || 0;
+    const totalTeachings = subscription.libro.cantidad_ensenanzas;
+    const currentTeaching = subscription.ultima_ensenanza_enviada || 0;
     const progress = totalTeachings > 0 ? (currentTeaching / totalTeachings) * 100 : 0;
 
     // Check if completed
@@ -249,7 +249,7 @@ export class SubscriptionsService {
     });
   }
 
-  private async calculateNextDeliveryDate(userId: number): Date {
+  private async calculateNextDeliveryDate(userId: number): Promise<Date> {
     const user = await this.prisma.usuario.findUnique({
       where: { id: userId },
       include: { frecuencia: true },
@@ -283,9 +283,9 @@ export class SubscriptionsService {
       throw new NotFoundException('Subscription not found');
     }
 
-    const nextOrder = (subscription.ultima_enseñanza_enviada || 0) + 1;
+    const nextOrder = (subscription.ultima_ensenanza_enviada || 0) + 1;
 
-    return this.prisma.enseñanza.findFirst({
+    return this.prisma.ensenanza.findFirst({
       where: {
         libro_id: subscription.libro_id,
         orden: nextOrder,

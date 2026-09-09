@@ -1,4 +1,4 @@
-import { Controller, Get, Post, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, Param, UseGuards, Request } from '@nestjs/common';
 import { DeliveriesService } from './deliveries.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
@@ -15,5 +15,10 @@ export class DeliveriesController {
   @Post('reschedule-all')
   rescheduleAllDeliveries() {
     return this.deliveriesService.rescheduleAllDeliveries();
+  }
+
+  @Post(':subscriptionId/process-now')
+  processDeliveryNow(@Param('subscriptionId') subscriptionId: string) {
+    return this.deliveriesService.processDeliveryNow(parseInt(subscriptionId));
   }
 }

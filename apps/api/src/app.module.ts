@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { BullModule } from '@nestjs/bull';
-import { PrismaService } from './common/prisma/prisma.service';
+import { PrismaModule } from './common/prisma/prisma.module';
 
 // Modules
 import { AuthModule } from './modules/auth/auth.module';
@@ -21,13 +21,18 @@ import { AdminModule } from './modules/admin/admin.module';
       isGlobal: true,
       envFilePath: '.env',
     }),
-    BullModule.forRoot({
-      redis: {
-        host: process.env.REDIS_HOST || 'localhost',
-        port: parseInt(process.env.REDIS_PORT) || 6379,
-        password: process.env.REDIS_PASSWORD || undefined,
-      },
-    }),
+    PrismaModule,
+    ...(process.env.USE_REDIS === 'true'
+      ? [
+          BullModule.forRoot({
+            redis: {
+              host: process.env.REDIS_HOST || 'localhost',
+              port: parseInt(process.env.REDIS_PORT) || 6379,
+              password: process.env.REDIS_PASSWORD || undefined,
+            },
+          }),
+        ]
+      : []),
     AuthModule,
     UsersModule,
     BooksModule,
@@ -39,6 +44,5 @@ import { AdminModule } from './modules/admin/admin.module';
     SuggestionsModule,
     AdminModule,
   ],
-  providers: [PrismaService],
 })
 export class AppModule {}

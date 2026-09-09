@@ -13,8 +13,8 @@ export class TranslationsService {
     // Check if translation already exists
     const existingTranslation = await this.prisma.traduccion.findUnique({
       where: {
-        enseñanza_id_idioma_id: {
-          enseñanza_id: enseñanzaId,
+        ensenanza_id_idioma_id: {
+          ensenanza_id: enseñanzaId,
           idioma_id: idiomaId,
         },
       },
@@ -34,7 +34,7 @@ export class TranslationsService {
     }
 
     // Get the original teaching
-    const enseñanza = await this.prisma.enseñanza.findUnique({
+    const enseñanza = await this.prisma.ensenanza.findUnique({
       where: { id: enseñanzaId },
       include: { libro: true },
     });
@@ -61,7 +61,7 @@ export class TranslationsService {
     // Store translation
     const translation = await this.prisma.traduccion.create({
       data: {
-        enseñanza_id: enseñanzaId,
+        ensenanza_id: enseñanzaId,
         idioma_id: idiomaId,
         texto_traducido: translatedText,
         veces_usado: 1,
@@ -76,7 +76,7 @@ export class TranslationsService {
     return this.prisma.traduccion.findUnique({
       where: { id },
       include: {
-        enseñanza: {
+        ensenanza: {
           include: { libro: true },
         },
         idioma: true,
@@ -86,7 +86,7 @@ export class TranslationsService {
 
   async getTranslationsByTeaching(enseñanzaId: number) {
     return this.prisma.traduccion.findMany({
-      where: { enseñanza_id: enseñanzaId },
+      where: { ensenanza_id: enseñanzaId },
       include: { idioma: true },
     });
   }
@@ -95,7 +95,7 @@ export class TranslationsService {
     return this.prisma.traduccion.findMany({
       where: { idioma_id: idiomaId },
       include: {
-        enseñanza: {
+        ensenanza: {
           include: { libro: true },
         },
       },
@@ -106,7 +106,7 @@ export class TranslationsService {
     const translation = await this.prisma.traduccion.findUnique({
       where: { id: translationId },
       include: {
-        enseñanza: true,
+        ensenanza: true,
         idioma: true,
       },
     });
@@ -117,7 +117,7 @@ export class TranslationsService {
 
     // Generate new translation
     const newTranslatedText = await this.aiService.translate(
-      translation.enseñanza.texto_original,
+      translation.ensenanza.texto_original,
       translation.idioma.nombre,
     );
 
@@ -143,7 +143,7 @@ export class TranslationsService {
       orderBy: { veces_usado: 'desc' },
       take: 10,
       include: {
-        enseñanza: {
+        ensenanza: {
           include: { libro: true },
         },
         idioma: true,

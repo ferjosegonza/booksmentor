@@ -26,10 +26,20 @@ interface Subscription {
   fecha_proximo_envio: string
 }
 
+interface Delivery {
+  id: number
+  fecha_envio: string
+  canal: string
+  contenido: string
+  idioma: { nombre: string }
+  enseñanza: { libro: { titulo: string } }
+}
+
 export default function DashboardPage() {
   const router = useRouter()
   const [user, setUser] = useState<User | null>(null)
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([])
+  const [deliveries, setDeliveries] = useState<Delivery[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -43,6 +53,7 @@ export default function DashboardPage() {
 
     setUser(JSON.parse(userData))
     fetchSubscriptions(token)
+    fetchDeliveries(token)
   }, [router])
 
   const fetchSubscriptions = async (token: string) => {
@@ -61,6 +72,22 @@ export default function DashboardPage() {
       console.error('Error fetching subscriptions:', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const fetchDeliveries = async (token: string) => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/deliveries/history`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      })
+
+      if (response.ok) {
+        setDeliveries(await response.json())
+      }
+    } catch (error) {
+      console.error('Error fetching deliveries:', error)
     }
   }
 
@@ -202,6 +229,37 @@ export default function DashboardPage() {
                     </div>
                   </div>
                 </div>
+              ))}
+            </div>
+          )}
+
+          <h2 className="text-xl font-semibold text-gray-900 mt-10 mb-4">
+            Enseñanzas recibidas
+          </h2>
+
+          {deliveries.length === 0 ? (
+            <div className="bg-white shadow rounded-lg p-6 text-center">
+              <p className="text-gray-500">Todavía no tienes enseñanzas disponibles.</p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {deliveries.map((delivery) => (
+                <article key={delivery.id} className="bg-white shadow rounded-lg p-6">
+                  <div className="flex justify-between items-start gap-4 mb-3">
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        {delivery.enseñanza.libro.titulo}
+                      </h3>
+                      <p className="text-sm text-gray-500">
+                        {delivery.idioma.nombre} · {new Date(delivery.fecha_envio).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <span className="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-800">
+                      Disponible en la plataforma
+                    </span>
+                  </div>
+                  <p className="text-gray-700 whitespace-pre-line">{delivery.contenido}</p>
+                </article>
               ))}
             </div>
           )}

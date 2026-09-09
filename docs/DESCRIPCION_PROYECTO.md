@@ -1,7 +1,7 @@
 # Descripción del Proyecto — Sistema de Envío de Enseñanzas por Suscripción
 
 > ⚠️ **Nota sobre los límites de free tier citados en este documento:** todos los proveedores gratuitos mencionados (email, IA, libros) modifican sus límites con frecuencia y sin aviso. Las cifras aquí son las vigentes al momento de este análisis y sirven como criterio de diseño (por eso el sistema usa un **catálogo rotativo configurable en base de datos** y no límites hardcodeados). Antes de cada despliegue a producción hay que verificar los valores actuales en la documentación oficial de cada proveedor.
-
+der
 ---
 
 ## 1. Resumen Ejecutivo
