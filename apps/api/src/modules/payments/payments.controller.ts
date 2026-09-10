@@ -1,14 +1,14 @@
 import { Controller, Get, Post, Put, Body, Param, Headers, UseGuards, Request } from '@nestjs/common';
-import { PaymentsService } from './payments.service';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { PaymentsService } from './payments.service.js';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
 
 @Controller('payments')
 export class PaymentsController {
   constructor(private paymentsService: PaymentsService) {}
 
   @Post('create-subscription')
-  @UseGuards(JwtAuthGuard)
-  createSubscription(@Request() req, @Body() body: { planId: string; region?: string }) {
+  @UseGuards(new JwtAuthGuard())
+  createSubscription(@Request() req: any, @Body() body: { planId: string; region?: string }) {
     return this.paymentsService.createSubscription(body.planId, req.user.id, body.region);
   }
 
@@ -23,13 +23,13 @@ export class PaymentsController {
   }
 
   @Put('cancel-subscription')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(new JwtAuthGuard())
   cancelSubscription(@Body() body: { subscriptionId: string; providerName: string }) {
     return this.paymentsService.cancelSubscription(body.subscriptionId, body.providerName);
   }
 
   @Post('refund')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(new JwtAuthGuard())
   refund(@Body() body: { transactionId: string; providerName: string; amount?: number }) {
     return this.paymentsService.refund(body.transactionId, body.providerName, body.amount);
   }
@@ -40,8 +40,8 @@ export class PaymentsController {
   }
 
   @Put('upgrade-plan')
-  @UseGuards(JwtAuthGuard)
-  upgradeUserPlan(@Request() req, @Body() body: { newPlanId: number }) {
+  @UseGuards(new JwtAuthGuard())
+  upgradeUserPlan(@Request() req: any, @Body() body: { newPlanId: number }) {
     return this.paymentsService.upgradeUserPlan(req.user.id, body.newPlanId);
   }
 }

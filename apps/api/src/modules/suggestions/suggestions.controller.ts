@@ -1,14 +1,14 @@
 import { Controller, Get, Post, Put, Body, Param, UseGuards, Request } from '@nestjs/common';
-import { SuggestionsService } from './suggestions.service';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { SuggestionsService } from './suggestions.service.js';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
 
 @Controller('suggestions')
 export class SuggestionsController {
   constructor(private suggestionsService: SuggestionsService) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard)
-  createSuggestion(@Request() req, @Body() body: {
+  @UseGuards(new JwtAuthGuard())
+  createSuggestion(@Request() req: any, @Body() body: {
     tipo_id: number;
     libro_sugerido?: string;
     mensaje: string;
@@ -31,8 +31,8 @@ export class SuggestionsController {
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard)
-  getSuggestions(@Request() req) {
+  @UseGuards(new JwtAuthGuard())
+  getSuggestions(@Request() req: any) {
     return this.suggestionsService.getSuggestions(req.user.id);
   }
 

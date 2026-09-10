@@ -158,7 +158,7 @@ export default function RegisterPage() {
               />
               <label htmlFor="acceptPolicy" className="ml-2 block text-sm text-gray-900">
                 Acepto la{' '}
-                <Link href="/politica-de-uso" className="text-primary-600 hover:text-primary-500">
+                <Link href="/politica-de-uso" className="text-primary-600 hover:text-primary-500" target="_blank" rel="noopener noreferrer">
                   Política de Uso
                 </Link>
               </label>

@@ -1,9 +1,9 @@
 import { Controller, Get, Post, Put, Body, Param, UseGuards, Request } from '@nestjs/common';
-import { AdminService } from './admin.service';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { AdminService } from './admin.service.js';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
 
 @Controller('admin')
-@UseGuards(JwtAuthGuard)
+@UseGuards(new JwtAuthGuard())
 export class AdminController {
   constructor(private adminService: AdminService) {}
 
@@ -14,22 +14,22 @@ export class AdminController {
   }
 
   @Put('teachings/:id/approve')
-  approveTeaching(@Param('id') id: string, @Request() req) {
+  approveTeaching(@Param('id') id: string, @Request() req: any) {
     return this.adminService.approveTeaching(parseInt(id), req.user.id);
   }
 
   @Put('teachings/:id/reject')
-  rejectTeaching(@Param('id') id: string, @Request() req, @Body() body?: { reason?: string }) {
+  rejectTeaching(@Param('id') id: string, @Request() req: any, @Body() body?: { reason?: string }) {
     return this.adminService.rejectTeaching(parseInt(id), req.user.id, body?.reason);
   }
 
   @Post('teachings/:id/regenerate')
-  regenerateTeaching(@Param('id') id: string, @Request() req) {
+  regenerateTeaching(@Param('id') id: string, @Request() req: any) {
     return this.adminService.regenerateTeaching(parseInt(id), req.user.id);
   }
 
   @Put('teachings/:id/edit')
-  editTeaching(@Param('id') id: string, @Request() req, @Body() body: { newText: string }) {
+  editTeaching(@Param('id') id: string, @Request() req: any, @Body() body: { newText: string }) {
     return this.adminService.editTeaching(parseInt(id), req.user.id, body.newText);
   }
 

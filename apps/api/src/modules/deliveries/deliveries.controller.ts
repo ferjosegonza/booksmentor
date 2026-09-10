@@ -1,14 +1,14 @@
 import { Controller, Get, Post, Param, UseGuards, Request } from '@nestjs/common';
-import { DeliveriesService } from './deliveries.service';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { DeliveriesService } from './deliveries.service.js';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
 
 @Controller('deliveries')
-@UseGuards(JwtAuthGuard)
+@UseGuards(new JwtAuthGuard())
 export class DeliveriesController {
   constructor(private deliveriesService: DeliveriesService) {}
 
   @Get('history')
-  getDeliveryHistory(@Request() req) {
+  getDeliveryHistory(@Request() req: any) {
     return this.deliveriesService.getDeliveryHistory(req.user.id);
   }
 

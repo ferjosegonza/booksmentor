@@ -1,9 +1,9 @@
 import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards, Request } from '@nestjs/common';
-import { BooksService } from './books.service';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { BooksService } from './books.service.js';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
 
 @Controller('books')
-@UseGuards(JwtAuthGuard)
+@UseGuards(new JwtAuthGuard())
 export class BooksController {
   constructor(private booksService: BooksService) {}
 

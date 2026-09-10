@@ -1,9 +1,10 @@
 import { Injectable, Logger, Optional } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bull';
-import { Queue } from 'bull';
-import { PrismaService } from '../../common/prisma/prisma.service';
-import { SubscriptionsService } from '../subscriptions/subscriptions.service';
-import { TranslationsService } from '../translations/translations.service';
+import type { Queue } from 'bull';
+import { PrismaService } from '../../common/prisma/prisma.service.js';
+import { getErrorMessage } from '../../common/utils/error-message.js';
+import { SubscriptionsService } from '../subscriptions/subscriptions.service.js';
+import { TranslationsService } from '../translations/translations.service.js';
 
 interface EmailProvider {
   sendEmail(to: string, subject: string, html: string): Promise<boolean>;
@@ -43,7 +44,7 @@ class ResendProvider implements EmailProvider {
 
       return true;
     } catch (error) {
-      this.logger.error(`Error sending email with Resend: ${error.message}`);
+      this.logger.error(`Error sending email with Resend: ${getErrorMessage(error)}`);
       return false;
     }
   }
@@ -82,7 +83,7 @@ class BrevoProvider implements EmailProvider {
 
       return true;
     } catch (error) {
-      this.logger.error(`Error sending email with Brevo: ${error.message}`);
+      this.logger.error(`Error sending email with Brevo: ${getErrorMessage(error)}`);
       return false;
     }
   }
@@ -134,7 +135,7 @@ class SesProvider implements EmailProvider {
       await this.ses.send(command);
       return true;
     } catch (error) {
-      this.logger.error(`Error sending email with SES: ${error.message}`);
+      this.logger.error(`Error sending email with SES: ${getErrorMessage(error)}`);
       return false;
     }
   }
@@ -244,7 +245,7 @@ export class DeliveriesService {
         await this.processScheduledDelivery(subscriptionId);
         return { success: true };
       } catch (error) {
-        this.logger.error(`Error processing delivery job: ${error.message}`);
+        this.logger.error(`Error processing delivery job: ${getErrorMessage(error)}`);
         throw error;
       }
     });
@@ -384,7 +385,7 @@ export class DeliveriesService {
 
       return success;
     } catch (error) {
-      this.logger.error(`Error sending email delivery: ${error.message}`);
+      this.logger.error(`Error sending email delivery: ${getErrorMessage(error)}`);
       return false;
     }
   }

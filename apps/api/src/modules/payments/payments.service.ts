@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from '../../common/prisma/prisma.service';
+import { PrismaService } from '../../common/prisma/prisma.service.js';
+import { getErrorMessage } from '../../common/utils/error-message.js';
 
 interface PaymentProvider {
   createSubscription(planId: string, userId: number): Promise<any>;
@@ -56,7 +57,7 @@ class MercadoPagoProvider implements PaymentProvider {
 
       return { init_point: preference.body.init_point };
     } catch (error) {
-      this.logger.error(`Error creating MercadoPago subscription: ${error.message}`);
+      this.logger.error(`Error creating MercadoPago subscription: ${getErrorMessage(error)}`);
       throw error;
     }
   }
@@ -70,7 +71,7 @@ class MercadoPagoProvider implements PaymentProvider {
       await this.mercadopago.preapproval.cancel(subscriptionId);
       return true;
     } catch (error) {
-      this.logger.error(`Error canceling MercadoPago subscription: ${error.message}`);
+      this.logger.error(`Error canceling MercadoPago subscription: ${getErrorMessage(error)}`);
       return false;
     }
   }
@@ -90,7 +91,7 @@ class MercadoPagoProvider implements PaymentProvider {
       await this.mercadopago.payments.refund(transactionId);
       return true;
     } catch (error) {
-      this.logger.error(`Error refunding MercadoPago transaction: ${error.message}`);
+      this.logger.error(`Error refunding MercadoPago transaction: ${getErrorMessage(error)}`);
       return false;
     }
   }
@@ -126,7 +127,7 @@ class PayPalProvider implements PaymentProvider {
       // This is a simplified version
       return { approvalUrl: 'https://paypal.com/approve' };
     } catch (error) {
-      this.logger.error(`Error creating PayPal subscription: ${error.message}`);
+      this.logger.error(`Error creating PayPal subscription: ${getErrorMessage(error)}`);
       throw error;
     }
   }
@@ -136,7 +137,7 @@ class PayPalProvider implements PaymentProvider {
       // Implement PayPal subscription cancellation
       return true;
     } catch (error) {
-      this.logger.error(`Error canceling PayPal subscription: ${error.message}`);
+      this.logger.error(`Error canceling PayPal subscription: ${getErrorMessage(error)}`);
       return false;
     }
   }
@@ -152,7 +153,7 @@ class PayPalProvider implements PaymentProvider {
       // Implement PayPal refund
       return true;
     } catch (error) {
-      this.logger.error(`Error refunding PayPal transaction: ${error.message}`);
+      this.logger.error(`Error refunding PayPal transaction: ${getErrorMessage(error)}`);
       return false;
     }
   }
@@ -185,7 +186,7 @@ class StripeProvider implements PaymentProvider {
       // This is a simplified version
       return { checkoutUrl: 'https://stripe.com/checkout' };
     } catch (error) {
-      this.logger.error(`Error creating Stripe subscription: ${error.message}`);
+      this.logger.error(`Error creating Stripe subscription: ${getErrorMessage(error)}`);
       throw error;
     }
   }
@@ -199,7 +200,7 @@ class StripeProvider implements PaymentProvider {
       await this.stripe.subscriptions.cancel(subscriptionId);
       return true;
     } catch (error) {
-      this.logger.error(`Error canceling Stripe subscription: ${error.message}`);
+      this.logger.error(`Error canceling Stripe subscription: ${getErrorMessage(error)}`);
       return false;
     }
   }
@@ -216,7 +217,7 @@ class StripeProvider implements PaymentProvider {
       this.logger.log(`Stripe webhook received: ${event.type}`);
       return { processed: true, eventType: event.type };
     } catch (error) {
-      this.logger.error(`Error processing Stripe webhook: ${error.message}`);
+      this.logger.error(`Error processing Stripe webhook: ${getErrorMessage(error)}`);
       throw error;
     }
   }
@@ -233,7 +234,7 @@ class StripeProvider implements PaymentProvider {
       });
       return true;
     } catch (error) {
-      this.logger.error(`Error refunding Stripe transaction: ${error.message}`);
+      this.logger.error(`Error refunding Stripe transaction: ${getErrorMessage(error)}`);
       return false;
     }
   }
@@ -295,7 +296,7 @@ export class PaymentsService {
       const provider = await this.getActiveProvider(region);
       return provider.createSubscription(planId, userId);
     } catch (error) {
-      this.logger.error(`Error creating subscription: ${error.message}`);
+      this.logger.error(`Error creating subscription: ${getErrorMessage(error)}`);
       throw error;
     }
   }
@@ -308,7 +309,7 @@ export class PaymentsService {
       }
       return provider.cancelSubscription(subscriptionId);
     } catch (error) {
-      this.logger.error(`Error canceling subscription: ${error.message}`);
+      this.logger.error(`Error canceling subscription: ${getErrorMessage(error)}`);
       throw error;
     }
   }
@@ -321,7 +322,7 @@ export class PaymentsService {
       }
       return provider.handleWebhook(data, signature);
     } catch (error) {
-      this.logger.error(`Error handling webhook: ${error.message}`);
+      this.logger.error(`Error handling webhook: ${getErrorMessage(error)}`);
       throw error;
     }
   }
@@ -334,7 +335,7 @@ export class PaymentsService {
       }
       return provider.refund(transactionId, amount);
     } catch (error) {
-      this.logger.error(`Error processing refund: ${error.message}`);
+      this.logger.error(`Error processing refund: ${getErrorMessage(error)}`);
       throw error;
     }
   }

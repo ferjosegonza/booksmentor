@@ -48,6 +48,7 @@ apps/web/.env.local
 
 # Prisma
 apps/api/prisma/migrations/
+apps/api/src/generated/
 
 # Expo
 .expo/

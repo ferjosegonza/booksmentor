@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
-import { PrismaService } from '../../common/prisma/prisma.service';
-import { UsersService } from '../users/users.service';
-import { BooksService } from '../books/books.service';
+import { PrismaService } from '../../common/prisma/prisma.service.js';
+import { UsersService } from '../users/users.service.js';
+import { BooksService } from '../books/books.service.js';
 
 @Injectable()
 export class SubscriptionsService {
