@@ -67,3 +67,5 @@ backup_laravel_project/
 *.temp
 
 docs/setup_guide_no_subir_a_git.md
+
+docker-compose.yml

@@ -12,7 +12,7 @@ services:
       MYSQL_USER: appuser
       MYSQL_PASSWORD: app_password
     volumes:
-      - D:\luciano\volumes\booksmentor:/var/lib/mysql
+      - map-directory:/var/lib/mysql
       - ./init-scripts:/docker-entrypoint-initdb.d
     networks:
       - app-network
