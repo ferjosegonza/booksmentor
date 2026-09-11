@@ -3,7 +3,7 @@ import { TranslationsService } from './translations.service.js';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
 
 @Controller('translations')
-@UseGuards(new JwtAuthGuard())
+@UseGuards(JwtAuthGuard)
 export class TranslationsController {
   constructor(private translationsService: TranslationsService) {}
 

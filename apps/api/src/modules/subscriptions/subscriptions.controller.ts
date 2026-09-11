@@ -3,7 +3,7 @@ import { SubscriptionsService } from './subscriptions.service.js';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
 
 @Controller('subscriptions')
-@UseGuards(new JwtAuthGuard())
+@UseGuards(JwtAuthGuard)
 export class SubscriptionsController {
   constructor(private subscriptionsService: SubscriptionsService) {}
 

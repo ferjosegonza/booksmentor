@@ -3,7 +3,7 @@ import { BooksService } from './books.service.js';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
 
 @Controller('books')
-@UseGuards(new JwtAuthGuard())
+@UseGuards(JwtAuthGuard)
 export class BooksController {
   constructor(private booksService: BooksService) {}
 

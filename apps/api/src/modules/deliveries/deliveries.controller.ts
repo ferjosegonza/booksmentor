@@ -3,7 +3,7 @@ import { DeliveriesService } from './deliveries.service.js';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
 
 @Controller('deliveries')
-@UseGuards(new JwtAuthGuard())
+@UseGuards(JwtAuthGuard)
 export class DeliveriesController {
   constructor(private deliveriesService: DeliveriesService) {}
 

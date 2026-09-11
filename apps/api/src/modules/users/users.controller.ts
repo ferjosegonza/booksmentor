@@ -3,7 +3,7 @@ import { UsersService } from "./users.service.js";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard.js";
 
 @Controller("users")
-@UseGuards(new JwtAuthGuard())
+@UseGuards(JwtAuthGuard)
 export class UsersController {
   constructor(private usersService: UsersService) {}
 

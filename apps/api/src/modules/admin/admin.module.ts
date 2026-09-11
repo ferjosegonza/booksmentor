@@ -4,9 +4,10 @@ import { AdminController } from "./admin.controller.js";
 import { BooksModule } from "../books/books.module.js";
 import { AiModule } from "../ai/ai.module.js";
 import { SuggestionsModule } from "../suggestions/suggestions.module.js";
+import { AuthModule } from "../auth/auth.module.js";
 
 @Module({
-  imports: [BooksModule, AiModule, SuggestionsModule],
+  imports: [AuthModule, BooksModule, AiModule, SuggestionsModule],
   controllers: [AdminController],
   providers: [AdminService],
 })

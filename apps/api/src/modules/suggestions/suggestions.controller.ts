@@ -7,7 +7,7 @@ export class SuggestionsController {
   constructor(private suggestionsService: SuggestionsService) {}
 
   @Post()
-  @UseGuards(new JwtAuthGuard())
+  @UseGuards(JwtAuthGuard)
   createSuggestion(@Request() req: any, @Body() body: {
     tipo_id: number;
     libro_sugerido?: string;
@@ -31,7 +31,7 @@ export class SuggestionsController {
   }
 
   @Get()
-  @UseGuards(new JwtAuthGuard())
+  @UseGuards(JwtAuthGuard)
   getSuggestions(@Request() req: any) {
     return this.suggestionsService.getSuggestions(req.user.id);
   }

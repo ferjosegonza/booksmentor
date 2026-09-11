@@ -7,7 +7,7 @@ export class PaymentsController {
   constructor(private paymentsService: PaymentsService) {}
 
   @Post('create-subscription')
-  @UseGuards(new JwtAuthGuard())
+  @UseGuards(JwtAuthGuard)
   createSubscription(@Request() req: any, @Body() body: { planId: string; region?: string }) {
     return this.paymentsService.createSubscription(body.planId, req.user.id, body.region);
   }
@@ -23,13 +23,13 @@ export class PaymentsController {
   }
 
   @Put('cancel-subscription')
-  @UseGuards(new JwtAuthGuard())
+  @UseGuards(JwtAuthGuard)
   cancelSubscription(@Body() body: { subscriptionId: string; providerName: string }) {
     return this.paymentsService.cancelSubscription(body.subscriptionId, body.providerName);
   }
 
   @Post('refund')
-  @UseGuards(new JwtAuthGuard())
+  @UseGuards(JwtAuthGuard)
   refund(@Body() body: { transactionId: string; providerName: string; amount?: number }) {
     return this.paymentsService.refund(body.transactionId, body.providerName, body.amount);
   }
@@ -40,7 +40,7 @@ export class PaymentsController {
   }
 
   @Put('upgrade-plan')
-  @UseGuards(new JwtAuthGuard())
+  @UseGuards(JwtAuthGuard)
   upgradeUserPlan(@Request() req: any, @Body() body: { newPlanId: number }) {
     return this.paymentsService.upgradeUserPlan(req.user.id, body.newPlanId);
   }

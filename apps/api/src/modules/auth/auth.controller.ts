@@ -33,20 +33,20 @@ export class AuthController {
     return this.authService.login(user);
   }
 
-  @UseGuards(new JwtAuthGuard())
+  @UseGuards(JwtAuthGuard)
   @Get('me')
   getProfile(@Request() req: any) {
     return req.user;
   }
 
   @Get('google')
-  @UseGuards(new GoogleAuthGuard())
+  @UseGuards(GoogleAuthGuard)
   async googleAuth() {
     // This route is handled by the guard
   }
 
   @Get('google/callback')
-  @UseGuards(new GoogleAuthGuard())
+  @UseGuards(GoogleAuthGuard)
   async googleAuthCallback(@Request() req: any) {
     return this.authService.googleLogin(req.user);
   }
