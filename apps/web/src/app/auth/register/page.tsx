@@ -158,7 +158,7 @@ export default function RegisterPage() {
               />
               <label htmlFor="acceptPolicy" className="ml-2 block text-sm text-gray-900">
                 Acepto la{' '}
-                <Link href="/politica-de-uso" className="text-primary-600 hover:text-primary-500">
+                <Link href="/politica-de-uso" className="text-primary-600 hover:text-primary-500" target="_blank" rel="noopener noreferrer">
                   Política de Uso
                 </Link>
               </label>
@@ -169,7 +169,7 @@ export default function RegisterPage() {
             <button
               type="submit"
               disabled={loading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-blue-100 group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Registrando...' : 'Registrarse'}
             </button>

@@ -1,12 +1,14 @@
 import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bull';
-import { DeliveriesService } from './deliveries.service';
-import { DeliveriesController } from './deliveries.controller';
-import { SubscriptionsModule } from '../subscriptions/subscriptions.module';
-import { TranslationsModule } from '../translations/translations.module';
+import { DeliveriesService } from './deliveries.service.js';
+import { DeliveriesController } from './deliveries.controller.js';
+import { SubscriptionsModule } from '../subscriptions/subscriptions.module.js';
+import { TranslationsModule } from '../translations/translations.module.js';
+import { AuthModule } from '../auth/auth.module.js';
 
 @Module({
   imports: [
+    AuthModule,
     SubscriptionsModule,
     TranslationsModule,
     ...(process.env.USE_REDIS === 'true'

@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Put, Body, Param, Headers, UseGuards, Request } from '@nestjs/common';
-import { PaymentsService } from './payments.service';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { PaymentsService } from './payments.service.js';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
 
 @Controller('payments')
 export class PaymentsController {
@@ -8,7 +8,7 @@ export class PaymentsController {
 
   @Post('create-subscription')
   @UseGuards(JwtAuthGuard)
-  createSubscription(@Request() req, @Body() body: { planId: string; region?: string }) {
+  createSubscription(@Request() req: any, @Body() body: { planId: string; region?: string }) {
     return this.paymentsService.createSubscription(body.planId, req.user.id, body.region);
   }
 
@@ -41,7 +41,7 @@ export class PaymentsController {
 
   @Put('upgrade-plan')
   @UseGuards(JwtAuthGuard)
-  upgradeUserPlan(@Request() req, @Body() body: { newPlanId: number }) {
+  upgradeUserPlan(@Request() req: any, @Body() body: { newPlanId: number }) {
     return this.paymentsService.upgradeUserPlan(req.user.id, body.newPlanId);
   }
 }

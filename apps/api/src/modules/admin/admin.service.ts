@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
-import { PrismaService } from '../../common/prisma/prisma.service';
-import { AiService } from '../ai/ai.service';
-import { BooksService } from '../books/books.service';
+import { PrismaService } from '../../common/prisma/prisma.service.js';
+import { AiService } from '../ai/ai.service.js';
+import { BooksService } from '../books/books.service.js';
 
 @Injectable()
 export class AdminService {

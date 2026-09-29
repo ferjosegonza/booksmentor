@@ -1,7 +1,7 @@
 import { Controller, Post, Body, UseGuards, Request, Get, Headers } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { GoogleAuthGuard } from './guards/google-auth.guard';
+import { AuthService } from './auth.service.js';
+import { JwtAuthGuard } from './guards/jwt-auth.guard.js';
+import { GoogleAuthGuard } from './guards/google-auth.guard.js';
 
 @Controller('auth')
 export class AuthController {
@@ -35,7 +35,7 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Get('me')
-  getProfile(@Request() req) {
+  getProfile(@Request() req: any) {
     return req.user;
   }
 
@@ -47,7 +47,7 @@ export class AuthController {
 
   @Get('google/callback')
   @UseGuards(GoogleAuthGuard)
-  async googleAuthCallback(@Request() req) {
+  async googleAuthCallback(@Request() req: any) {
     return this.authService.googleLogin(req.user);
   }
 }

@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from '../../common/prisma/prisma.service';
+import { PrismaService } from '../../common/prisma/prisma.service.js';
+import { getErrorMessage } from '../../common/utils/error-message.js';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import Groq from 'groq-sdk';
 import { HfInference } from '@huggingface/inference';
@@ -40,7 +41,7 @@ class GeminiProvider implements AiProvider {
       const response = await result.response;
       return response.text();
     } catch (error) {
-      this.logger.error(`Error generating teaching with Gemini: ${error.message}`);
+      this.logger.error(`Error generating teaching with Gemini: ${getErrorMessage(error)}`);
       throw error;
     }
   }
@@ -55,7 +56,7 @@ class GeminiProvider implements AiProvider {
       const response = await result.response;
       return response.text();
     } catch (error) {
-      this.logger.error(`Error translating with Gemini: ${error.message}`);
+      this.logger.error(`Error translating with Gemini: ${getErrorMessage(error)}`);
       throw error;
     }
   }
@@ -92,7 +93,7 @@ class GroqProvider implements AiProvider {
 
       return response.choices[0]?.message?.content || '';
     } catch (error) {
-      this.logger.error(`Error generating teaching with Groq: ${error.message}`);
+      this.logger.error(`Error generating teaching with Groq: ${getErrorMessage(error)}`);
       throw error;
     }
   }
@@ -108,7 +109,7 @@ class GroqProvider implements AiProvider {
 
       return response.choices[0]?.message?.content || '';
     } catch (error) {
-      this.logger.error(`Error translating with Groq: ${error.message}`);
+      this.logger.error(`Error translating with Groq: ${getErrorMessage(error)}`);
       throw error;
     }
   }
@@ -149,7 +150,7 @@ class HuggingFaceProvider implements AiProvider {
 
       return response.generated_text || '';
     } catch (error) {
-      this.logger.error(`Error generating teaching with HuggingFace: ${error.message}`);
+      this.logger.error(`Error generating teaching with HuggingFace: ${getErrorMessage(error)}`);
       throw error;
     }
   }
@@ -169,7 +170,7 @@ class HuggingFaceProvider implements AiProvider {
 
       return response.generated_text || '';
     } catch (error) {
-      this.logger.error(`Error translating with HuggingFace: ${error.message}`);
+      this.logger.error(`Error translating with HuggingFace: ${getErrorMessage(error)}`);
       throw error;
     }
   }
@@ -219,8 +220,8 @@ export class AiService {
     for (const entry of catalog) {
       const provider = this.providers.get(entry.proveedor);
       if (provider) {
-        // Check if provider is exhausted
-        if (entry.consumo_tokens >= entry.limite_tokens) {
+        // Check if provider is exhausted. A null limit means no quota cap.
+        if (entry.consumo_tokens >= (entry.limite_tokens ?? Number.MAX_SAFE_INTEGER)) {
           await this.prisma.aiCatalog.update({
             where: { id: entry.id },
             data: { estado: 'agotado' },
@@ -280,7 +281,7 @@ export class AiService {
 
       return result;
     } catch (error) {
-      this.logger.error(`Error generating teaching: ${error.message}`);
+      this.logger.error(`Error generating teaching: ${getErrorMessage(error)}`);
       
       // Log error
       await this.prisma.auditoria_IA.create({
@@ -290,7 +291,7 @@ export class AiService {
           modelo: 'default',
           cuota_usada: 0,
           solicitud: { bookTitle, bookAuthor, bookTheme },
-          error: error.message,
+          error: getErrorMessage(error),
           exitoso: false,
         },
       });
@@ -326,7 +327,7 @@ export class AiService {
 
       return result;
     } catch (error) {
-      this.logger.error(`Error translating: ${error.message}`);
+      this.logger.error(`Error translating: ${getErrorMessage(error)}`);
       
       // Log error
       await this.prisma.auditoria_IA.create({
@@ -336,7 +337,7 @@ export class AiService {
           modelo: 'default',
           cuota_usada: 0,
           solicitud: { text, targetLanguage },
-          error: error.message,
+          error: getErrorMessage(error),
           exitoso: false,
         },
       });
